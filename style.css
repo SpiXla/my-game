@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: url('images/background2.png') no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center; /* Centers content horizontally */
+    align-items: flex-end; /* Aligns content at the bottom */
+    height: 100vh; /* Ensures full viewport height */
+    position: relative; /* Ensures the positioning of the duck is relative to the body */
+}
+
+button {
+    background-color: #d4af37; /* Classic gold color */
+    color: #000; /* Black text for contrast */
+    border: 3px solid #a67c00; /* Dark gold border for a classic look */
+    border-radius: 5px; /* Subtle rounded corners */
+    padding: 15px 30px;
+    font-size: 18px; /* Moderate size for readability */
+    font-family: "Courier New", Courier, monospace; /* Classic monospace font */
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 6px #8b5e00; /* Shadow for a 3D effect */
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 80px; /* Increased to move the button further up */
+}
+
+button:hover {
+    background-color: #e5c07b; /* Lighter gold for hover effect */
+}
+
+button:active {
+    box-shadow: 0 3px #8b5e00; /* Reduced shadow on press */
+    transform: translateY(3px); /* Pressed-down effect */
+}
+
+/* Styling for the duck */
+#duck {
+    position: absolute; /* Ensures the duck moves based on left and top */
+    width: 100px; /* Corrected from weight */
+    height: 100px;
+}
