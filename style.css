@@ -42,3 +42,32 @@ button:active {
     width: 100px; /* Corrected from weight */
     height: 100px;
 }
+
+.lost-p {
+    position: absolute; /* Position it absolutely within the body */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Ensure exact centering */
+    font-size: 48px; /* Large font size for visibility */
+    font-weight: bold; /* Bold text */
+    color: #ff4444; /* Red color for emphasis */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for better contrast */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    padding: 20px 40px; /* Padding for better spacing */
+    border-radius: 10px; /* Rounded corners */
+    border: 3px solid #ff0000; /* Red border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    text-align: center; /* Center the text */
+    z-index: 1000; /* Ensure it appears above other elements */
+    animation: fadeIn 0.5s ease-in-out; /* Fade-in animation */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
