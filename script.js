@@ -1,93 +1,61 @@
 class Duck {
     constructor() {
-        this.duckElement = this.createDuck();
-        console.log(this.duckElement);
-        this.posX = Math.random() * (window.innerWidth - 100);
-        this.posY = Math.random() * (window.innerHeight - 250);
-        this.lastAngle = null;
-        this.setRandomSpeed();
-        this.animateDuck();
-        this.listen()
+        this.duck = document.createElement("img")
+        this.duck.src = "images/duck.gif"
+        this.duck.style.width = "100px"
+        this.duck.style.height = "100px"
+        document.body.append(this.duck)
+        this.randomPos()
     }
-
-    listen() {
-        this.duckElement.addEventListener("click",(e)=>{
-            console.log("hhh");
-        })
-    }
-
-    createDuck() {
-        const duck = document.createElement("img");
-        duck.src = "images/duck.gif";
-        duck.style.height = "100px";
-        duck.style.width = "100px";
-        duck.style.position = "absolute";
-        document.body.appendChild(duck);
-        return duck;
-    }
-
-    setRandomSpeed() {
-        let newAngle;
-        do {
-            newAngle = Math.random() * 2 * Math.PI;
-        } while (this.lastAngle !== null && Math.abs(newAngle - this.lastAngle) < Math.PI / 4);
-        
-        this.lastAngle = newAngle;
-        this.speedX = Math.cos(newAngle) * (Math.random() * 4 + 4);
-        this.speedY = Math.sin(newAngle) * (Math.random() * 4 + 4);
-        this.updateDirection();
-    }
-
-    updateDirection() {
-        this.duckElement.style.transform = this.speedX > 0 ? "scaleX(1)" : "scaleX(-1)";
-    }
-
-    animateDuck() {
-        const move = () => {
-            this.posX += this.speedX;
-            this.posY += this.speedY;
-            
-            if (this.posX <= 0 || this.posX >= window.innerWidth - 100) {
-                this.posX = Math.max(1, Math.min(this.posX, window.innerWidth - 101)); 
-                this.setRandomSpeed();
+    randomPos() {
+        let x 
+        let y
+        const n = Math.floor(Math.random() * 4) + 1
+        switch (n) {
+            case 1:
+                x = 0
+                y = Math.floor(Math.random() * window.innerHeight) + 1
+                break
+            case 2:
+                x = window.innerWidth - 100 
+                y = Math.floor(Math.random() * window.innerHeight) + 1
+                break
+                case 3:
+                    x = Math.floor(Math.random() * window.innerWidth) + 1
+                    y = 0
+                    break
+                case 4:
+                x = Math.floor(Math.random() * window.innerWidth) + 1
+                y = window.innerHeight - 100
+                break
             }
-            if (this.posY <= 0 || this.posY >= window.innerHeight - 250) {
-                this.posY = Math.max(1, Math.min(this.posY, window.innerHeight - 251)); 
-                this.setRandomSpeed();
+            if (y==window.innerHeight){
+                y -= 100
             }
-
-            this.duckElement.style.left = `${this.posX}px`;
-            this.duckElement.style.top = `${this.posY}px`;
-
-            requestAnimationFrame(move);
-        };
-        requestAnimationFrame(move);
+            if (x==window.innerWidth){
+                x -= 100
+            }
+        console.log(n,x,y);
+        this.duck.style.position = "absolute"
+        this.duck.style.left = x + 'px';
+        this.duck.style.top = y + 'px';    
     }
 }
+
 
 class Game {
-    constructor() {
-        this.startBtn = null;
-        this.duck = null;
-        this.initializeGame();
+    gameStart(){
+        this.startbtn.style.display = "none"
+        this.duck = new Duck()
     }
-
-    initializeGame() {
-        this.createStartButton();
-    }
-
-    createStartButton() {
-        this.startBtn = document.createElement("button");
-        this.startBtn.id = "start-button";
-        this.startBtn.textContent = "Start Game";
-        document.body.appendChild(this.startBtn);
-        this.startBtn.addEventListener("click", () => this.startGame());
-    }
-
-    startGame() {
-        this.startBtn.remove();
-        this.duck = new Duck();
+    buttonListen() {
+        this.startbtn = document.createElement("button")
+        this.startbtn.textContent = "Start Game"
+        this.startbtn.className = "startbtn"
+        document.body.append(this.startbtn)
+        this.startbtn.addEventListener("click", () => this.gameStart())
     }
 }
 
-const game = new Game();
+const game = new Game()
+game.buttonListen()
