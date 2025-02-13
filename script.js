@@ -8,7 +8,9 @@ class Duck {
         this.duck.style.height = "100px"
         document.body.append(this.duck)
         this.randomPos()
+
         //this.animateDuck()
+
         this.duck.addEventListener("click", ()=> this.shootedDuck())
     }
 
@@ -28,8 +30,7 @@ class Duck {
     }
 
     randomPos() {
-        let x 
-        let y
+        let x ;let y
         const n = Math.floor(Math.random() * 4) + 1
         switch (n) {
             case 1:
@@ -62,38 +63,45 @@ class stages {
         this.shots = shots
         this.timer = timer
         this.duckNumber = duckNumber
+        this.shotUsed = 0;
+        console.log(rounds,shots,timer,duckNumber);
         this.startStage()
     }
 
     lost(){
-        document.body.innerHTML = ""
+        this.resetGame()
         const lostMssg = document.createElement("p")
         lostMssg.classList.add("lost-p")
         lostMssg.innerText = "You Lost! Try Again!"
         document.body.append(lostMssg)
-        const game = new Game()
     }
 
+    resetGame() {
+        document.body.innerHTML = "";
+        const game = new Game();
+    }
+    
+
     startStage(){
-        while (this.rounds != 0) {
             this.startRound()
-            this.rounds--
-        }
     }
 
     startRound() {
-        let shotUsed = 0
+        this.rounds--
         for(let i = 0; i < this.duckNumber; i++){
             this.duck = new Duck()
         }
         setTimeout(()=>{
             window.addEventListener("click",()=>{
                 shotUsed++
-                console.log(shotUsed);
-                if (shotUsed == this.shots) {
+                console.log(this.shotUsed);
+                if (this.shotUsed >= this.shots) {
                     const ducksN = document.querySelectorAll(".alive").length
-                    if( ducksN != 0 ){
+                    if( ducksN > 0 ){
                         this.lost()
+                    }else{
+                        this.startRound()
+                        
                     }
                 }
             })
@@ -101,6 +109,48 @@ class stages {
     }
 
 }
+class stage1 extends stages {
+    constructor(){
+        super(3, 3, 5, 1); 
+    }
+    startRound() {
+        super.startRound();
+        if (this.rounds === 0) {
+            this.currentStage = new stage2();
+        }
+    }
+}
+class stage2 extends stages {
+    constructor(){
+        super(4, 3, 5, 2);
+    }
+    startRound() {
+        super.startRound();
+        if (this.rounds === 0) {
+            this.currentStage = new stage3();
+        }
+    }
+}
+class stage3 extends stages {
+    constructor(){
+        super(5, 4, 5, 4)
+    }
+    win() {
+        document.body.innerHTML = "";
+        const winMsg = document.createElement("p");
+        winMsg.classList.add("win-p");
+        winMsg.innerText = "You Win! Congratulations!";
+        document.body.append(winMsg);
+        const game = new Game();
+    }
+    startRound() {
+        super.startRound();
+        if (this.rounds === 0) {
+            this.win();
+        }
+    }
+}
+
 
 class Game {
     constructor(){
@@ -113,14 +163,14 @@ class Game {
             lost.remove()
         }
         this.startbtn.style.display = "none"
+        this.currentStage = new stage1();
         // round shots timer dusckn
         // this.stage1 = new stages(3,3,5,1)
-        class stage1 extends stages {
-            
-        }
+       
         // this.stage2 = new stages(4,3,5,2)
         // this.stage3 = new stages(5,4,5,4)
     }
+    
     buttonListen() {
         this.startbtn = document.createElement("button")
         this.startbtn.textContent = "Start Game"
