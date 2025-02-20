@@ -1,4 +1,4 @@
-export default class Duck {
+export default class Ship {
     constructor() {
         this.duck = document.createElement("img")
         this.duck.classList.add("ship")

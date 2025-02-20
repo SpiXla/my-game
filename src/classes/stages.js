@@ -1,4 +1,4 @@
-import Duck from "./duck.js";
+import Ship from "./duck.js";
 import Game from "./game.js";
 
 class stages {
@@ -44,7 +44,7 @@ class stages {
 
     startRound() {
         for (let i = 0; i < this.shipsNumber; i++) {
-            this.duck = new Duck();
+            this.duck = new Ship();
         }
         const handleClick = () => {
             this.shotUsed++;
