@@ -2,11 +2,11 @@ import Duck from "./duck.js";
 import Game from "./game.js";
 
 class stages {
-    constructor(rounds, shots, timer, duckNumber) {
+    constructor(rounds, ships, timer, shipsNumber) {
         this.rounds = rounds;
-        this.shots = shots;
+        this.ships = ships;
         this.timer = timer;
-        this.duckNumber = duckNumber;
+        this.shipsNumber = shipsNumber;
         this.shotUsed = 0;
         this.startStage();
     }
@@ -43,7 +43,7 @@ class stages {
     }
 
     startRound() {
-        for (let i = 0; i < this.duckNumber; i++) {
+        for (let i = 0; i < this.shipsNumber; i++) {
             this.duck = new Duck();
         }
         const handleClick = () => {
@@ -55,7 +55,7 @@ class stages {
                 }, 1500);
             }
 
-            if (this.shotUsed >= this.shots) {
+            if (this.shotUsed >= this.ship) {
                 if (ducksN > 0) {
                     this.shotUsed = 0;
                     window.removeEventListener("click", handleClick);

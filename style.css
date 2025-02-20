@@ -1,73 +1,97 @@
+/* Reset default margin and padding */
 body {
     margin: 0;
     padding: 0;
-    background: url('./assets/background2.png') no-repeat center center fixed;
-    background-size: cover;
+    background: 
+        url('./assets/stars.jpg') no-repeat center center fixed,  /* Stars image */
+        linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), /* Dark gradient overlay */
+        url('./assets/gradient.png') no-repeat center center fixed; /* Gradient image */
+    background-size: cover, cover, cover;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center; /* Centers content horizontally */
     align-items: flex-end; /* Aligns content at the bottom */
     height: 100vh; /* Ensures full viewport height */
-    position: relative; /* Ensures the positioning of the duck is relative to the body */
+    position: relative; /* Ensures proper positioning */
 }
 
+/* Alternative: Gradient Overlay Using ::before */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+    z-index: 1;
+}
+
+/* Ensure the button is above the gradient overlay */
 button {
     background-color: #d4af37; /* Classic gold color */
     color: #000; /* Black text for contrast */
-    border: 3px solid #a67c00; /* Dark gold border for a classic look */
+    border: 3px solid #a67c00; /* Dark gold border */
     border-radius: 5px; /* Subtle rounded corners */
     padding: 15px 30px;
-    font-size: 18px; /* Moderate size for readability */
-    font-family: "Courier New", Courier, monospace; /* Classic monospace font */
+    font-size: 18px; /* Readable font size */
+    font-family: "Courier New", Courier, monospace; /* Monospace font */
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
     box-shadow: 0 6px #8b5e00; /* Shadow for a 3D effect */
     transition: all 0.2s ease-in-out;
-    margin-bottom: 80px; /* Increased to move the button further up */
+    margin-bottom: 80px; /* Moves the button up */
+    position: relative;
+    z-index: 2; /* Ensures button stays visible */
 }
 
 button:hover {
-    background-color: #e5c07b; /* Lighter gold for hover effect */
+    background-color: #e5c07b; /* Lighter gold on hover */
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
 }
 
 button:active {
     box-shadow: 0 3px #8b5e00; /* Reduced shadow on press */
-    transform: translateY(3px); /* Pressed-down effect */
+    transform: translateY(3px); /* Pressed effect */
 }
 
-/* Styling for the duck */
+/* Duck positioning */
 #duck {
-    position: absolute; /* Ensures the duck moves based on left and top */
-    width: 100px; /* Corrected from weight */
+    position: absolute;
+    width: 100px;
     height: 100px;
+    z-index: 2;
 }
 
+/* Lost message */
 .lost-p {
-    position: absolute; /* Position it absolutely within the body */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Ensure exact centering */
-    font-size: 48px; /* Large font size for visibility */
-    font-weight: bold; /* Bold text */
-    color: #ff4444; /* Red color for emphasis */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for better contrast */
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-    padding: 20px 40px; /* Padding for better spacing */
-    border-radius: 10px; /* Rounded corners */
-    border: 3px solid #ff0000; /* Red border */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-    text-align: center; /* Center the text */
-    z-index: 1000; /* Ensure it appears above other elements */
-    animation: fadeIn 0.5s ease-in-out; /* Fade-in animation */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff4444;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px 40px;
+    border-radius: 10px;
+    border: 3px solid #ff0000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 1000;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Fade-in animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
+        transform: scale(0.9);
     }
     to {
         opacity: 1;
+        transform: scale(1);
     }
 }
