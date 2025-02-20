@@ -1,106 +1,106 @@
-import Ship from "./duck.js";
+import Ship from "./ship.js"; // Represents the player
+import Enemy from "./enemy.js"; // Represents the enemies
 import Game from "./game.js";
 
-class stages {
-    constructor(rounds, ships, timer, shipsNumber) {
+class Stages {
+    constructor(rounds, timer, enemiesNumber) {
         this.rounds = rounds;
-        this.ships = ships;
         this.timer = timer;
-        this.shipsNumber = shipsNumber;
-        this.shotUsed = 0;
-        this.startStage();
+        this.enemiesNumber = enemiesNumber; // Number of enemies
+        this.enemies = []; // Array to store enemy instances
+        this.ship = new Ship(); // Create the player's ship
+        this.startStage(); // Start the stage (and the first round)
     }
 
     lost() {
         document.body.innerHTML = "";
-        const lostMssg = document.createElement("p");
-        lostMssg.classList.add("lost-p");
-        lostMssg.innerText = "You Lost! Try Again!";
-        document.body.append(lostMssg);
+        const lostMsg = document.createElement("p");
+        lostMsg.classList.add("lost-p");
+        lostMsg.innerText = "You Lost! Try Again!";
+        document.body.append(lostMsg);
         this.resetGame();
     }
 
     resetGame() {
-        const game = new Game();
+        const game = new Game(); // Restart the game
     }
 
     startStage() {
-        this.startRound();
+        this.startRound(); // Start the first round
     }
 
     wonRound() {
         this.rounds--;
         console.log(`Rounds left: ${this.rounds}`);
         if (this.rounds === 0) {
-            this.proceedToNextStage(); 
+            this.proceedToNextStage(); // Proceed to the next stage
         } else {
-            this.startRound();
+            this.startRound(); // Start the next round
         }
     }
 
     proceedToNextStage() {
-
+        // Override in child classes
     }
 
+    // stages.js
     startRound() {
-        for (let i = 0; i < this.shipsNumber; i++) {
-            this.duck = new Ship();
+        // Clear existing enemies
+        this.enemies.forEach(enemy => enemy.element.remove());
+        this.enemies = [];
+
+        // Create new enemies
+        for (let i = 0; i < this.enemiesNumber; i++) {
+            const enemy = new Enemy(this.ship); // Pass the ship reference
+            this.enemies.push(enemy);
         }
+
         const handleClick = () => {
-            this.shotUsed++;
-            const ducksN = document.querySelectorAll(".alive").length;
-            if (ducksN === 0) {
+            const aliveEnemies = document.querySelectorAll(".enemy.alive").length;
+            if (aliveEnemies === 0) {
                 setTimeout(() => {
                     this.wonRound();
                 }, 1500);
             }
-
-            if (this.shotUsed >= this.ship) {
-                if (ducksN > 0) {
-                    this.shotUsed = 0;
-                    window.removeEventListener("click", handleClick);
-                    this.lost();
-                } else {
-                    this.shotUsed = 0;
-                    this.startRound();
-                }
-            }
         };
+
         setTimeout(() => {
             window.addEventListener("click", handleClick);
         }, 100);
     }
 }
 
-export class stage1 extends stages {
+// Export Stage1 as the default export
+export default class Stage1 extends Stages {
     constructor() {
-        super(3, 3, 5, 1);
+        super(3, 5, 1); // 3 rounds, 5-second timer, 1 enemy
     }
 
     proceedToNextStage() {
-        this.currentStage = new stage2();
+        this.currentStage = new Stage2(); // Move to Stage 2
         this.currentStage.startStage();
     }
 }
 
-export class stage2 extends stages {
+// Export Stage2 and Stage3 as named exports
+export class Stage2 extends Stages {
     constructor() {
-        super(4, 3, 5, 2);
+        super(4, 5, 2); // 4 rounds, 5-second timer, 2 enemies
     }
 
     proceedToNextStage() {
-        this.currentStage = new stage3();
+        this.currentStage = new Stage3(); // Move to Stage 3
         this.currentStage.startStage();
     }
 }
 
-export class stage3 extends stages {
+export class Stage3 extends Stages {
     constructor() {
-        super(5, 4, 5, 4);
+        super(5, 5, 4); // 5 rounds, 5-second timer, 4 enemies
     }
 
     proceedToNextStage() {
-        this.win();
+        this.win(); // Player wins the game
     }
 
     win() {
@@ -109,6 +109,14 @@ export class stage3 extends stages {
         winMsg.classList.add("win-p");
         winMsg.innerText = "You Win! Congratulations!";
         document.body.append(winMsg);
-        const game = new Game();
+        const game = new Game(); // Restart the game
     }
 }
+
+// Start the game
+function startGame() {
+    const stage1 = new Stage1(); // Start with Stage 1
+}
+
+// Call startGame to begin the game
+startGame();

@@ -1,4 +1,4 @@
-import {stage1,stage2,stage3} from "./stages.js"
+import Stage1 from "./stages.js"
 
 export default class Game {
     constructor(){
@@ -7,7 +7,7 @@ export default class Game {
 
     gameStart(){
         document.body.innerHTML = ""
-        this.currentStage = new stage1();
+        this.currentStage = new Stage1();
     }
 
     resetGame() {
@@ -17,6 +17,8 @@ export default class Game {
 
     
     buttonListen() {
+        console.log('salam');
+        
         this.startbtn = document.createElement("button")
         this.startbtn.textContent = "Start Game"
         this.startbtn.className = "startbtn"
