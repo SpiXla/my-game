@@ -30,29 +30,32 @@ export default class Duck {
     }
 
     randomPos() {
-        let x ;let y
-        const n = Math.floor(Math.random() * 4) + 1
-        switch (n) {
-            case 1:
-                x = 0
-                y = Math.floor(Math.random() * (window.innerHeight - 250)) + 1
-                break
-            case 2:
-                x = window.innerWidth - 100 
-                y = Math.floor(Math.random() * (window.innerHeight- 250)) + 1
-                break
-                case 3:
-                    x = Math.floor(Math.random() * (window.innerWidth - 100)) + 1
-                    y = 0
-                    break
-                case 4:
-                x = Math.floor(Math.random() * (window.innerWidth - 100)) + 1
-                y = window.innerHeight - 250
-                break
-            }
+
+        // let x ;let y
+        // const n = Math.floor(Math.random() * 4) + 1
+        // // console.log(n);
+        
+        // switch (n) {
+        //     case 1:
+        //         x = 0
+        //         y = Math.floor(Math.random() * (window.innerHeight - 250)) + 1
+        //         break
+        //     case 2:
+        //         x = window.innerWidth - 100 
+        //         y = Math.floor(Math.random() * (window.innerHeight- 250)) + 1
+        //         break
+        //         case 3:
+        //             x = Math.floor(Math.random() * (window.innerWidth - 100)) + 1
+        //             y = 0
+        //             break
+        //         case 4:
+        //         x = Math.floor(Math.random() * (window.innerWidth - 100)) + 1
+        //         y = window.innerHeight - 250
+        //         break
+        //     }
 
         this.duck.style.position = "absolute"
-        this.duck.style.left = x + 'px';
-        this.duck.style.top = y + 'px';    
+        this.duck.style.left = Math.floor(document.width/2) + 'px';
+        this.duck.style.top =  window.innerHeight - 150 + 'px';    
     }
 }
