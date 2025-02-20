@@ -3,9 +3,9 @@ body {
     margin: 0;
     padding: 0;
     background: 
-        url('./assets/stars.jpg') no-repeat center center fixed,  /* Stars image */
-        linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), /* Dark gradient overlay */
-        url('./assets/gradient.png') no-repeat center center fixed; /* Gradient image */
+        url('./assets/stars.jpg') no-repeat center center fixed;  /* Stars image */
+        /* linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), Dark gradient overlay */
+        /* url('./assets/gradient.png') no-repeat center center fixed; Gradient image */
     background-size: cover, cover, cover;
     font-family: Arial, sans-serif;
     display: flex;

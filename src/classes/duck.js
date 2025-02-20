@@ -7,23 +7,26 @@ export default class Duck {
         this.duck.style.width = "50px"
         this.duck.style.height = "50px"
         document.body.append(this.duck)
-        this.randomPos()
+        this.duck.style.position = "absolute"
+        this.duck.style.left = Math.floor(document.width/2) + 'px';
+        this.duck.style.top =  window.innerHeight - 150 + 'px'; 
+        // this.randomPos()
 
         //this.animateDuck()
 
-        this.duck.addEventListener("click", ()=> this.shootedDuck())
+        // this.duck.addEventListener("click", ()=> this.shootedDuck())
     }
 
-    shootedDuck(){
-        this.duck.src = "../../assets/duck-hit.png"
-        this.duck.classList.remove("alive")
-        setTimeout(()=>{
-            this.duck.src = "../../assets/boog.gif"
-            setTimeout(()=>{
-                this.duck.remove()
-            },500)
-        },2000)
-    }
+    // shootedDuck(){
+    //     this.duck.src = "../../assets/duck-hit.png"
+    //     this.duck.classList.remove("alive")
+    //     setTimeout(()=>{
+    //         this.duck.src = "../../assets/boog.gif"
+    //         setTimeout(()=>{
+    //             this.duck.remove()
+    //         },500)
+    //     },2000)
+    // }
 
     animateDuck(){
         // animi azbi
@@ -54,8 +57,6 @@ export default class Duck {
         //         break
         //     }
 
-        this.duck.style.position = "absolute"
-        this.duck.style.left = Math.floor(document.width/2) + 'px';
-        this.duck.style.top =  window.innerHeight - 150 + 'px';    
+          
     }
 }
