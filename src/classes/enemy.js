@@ -41,12 +41,12 @@ export default class Enemy {
 
                 // Get the ship's position
                 const shipRect = this.ship.element.getBoundingClientRect();
-                const shipX = shipRect.left + 25; // Center of the ship (50px / 2 = 25px)
-                const shipY = shipRect.top + 25; // Center of the ship (50px / 2 = 25px)
+                const shipX = shipRect.left; // Left edge of the ship
+                const shipY = shipRect.top; // Top edge of the ship
 
                 // Calculate the direction vector
-                const dx = shipX - (currentLeft + 25); // Enemy's center X
-                const dy = shipY - (currentTop + 25); // Enemy's center Y
+                const dx = shipX - currentLeft; // Move toward the ship's left edge
+                const dy = shipY - currentTop; // Move toward the ship's top edge
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 // Normalize the direction vector
@@ -57,15 +57,16 @@ export default class Enemy {
                 this.element.style.left = `${currentLeft + directionX * this.speed}px`;
                 this.element.style.top = `${currentTop + directionY * this.speed}px`;
 
-                // Check if the enemy has reached the ship's position
+                // Check if the enemy has touched the top of the ship
                 const enemyRect = this.element.getBoundingClientRect();
-                const enemyX = enemyRect.left + 25; // Enemy's center X
-                const enemyY = enemyRect.top + 25; // Enemy's center Y
-
-                if (Math.abs(enemyX - shipX) < 5 && Math.abs(enemyY - shipY) < 5) {
-                    // Enemy has reached the ship
+                if (
+                    enemyRect.left < shipRect.right && // Enemy is to the left of the ship's right edge
+                    enemyRect.right > shipRect.left && // Enemy is to the right of the ship's left edge
+                    enemyRect.bottom >= shipRect.top // Enemy's bottom has reached the ship's top
+                ) {
+                    // Enemy has touched the top of the ship
                     this.destroy(); // Destroy the enemy
-                    this.ship.takeDamage(); // Damage the ship (if applicable)
+                    this.ship.disappear(); // Make the ship disappear
                 } else {
                     // Continue moving
                     requestAnimationFrame(moveEnemy);
