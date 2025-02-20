@@ -11,6 +11,7 @@ export default class Ship {
         this.ship.style.bottom = "20px"; // Position the ship near the bottom
         this.ship.style.width = "50px"; // Set the size of the ship
         this.ship.style.height = "50px";
+        this.ship.style.zIndex ="1"
         this.element.append(this.ship)
         // this.element.style.backgroundColor = "blue"; // Placeholder for ship appearance
         document.body.append(this.element);

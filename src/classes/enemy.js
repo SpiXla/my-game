@@ -2,7 +2,7 @@
 export default class Enemy {
     constructor(ship) {
         this.ship = ship; // Reference to the player's ship
-        this.speed = 2; // Speed of the enemy movement
+        this.speed = 1; // Speed of the enemy movement
         this.element = document.createElement("img");
         this.element.classList.add("enemy", "alive");
         this.element.src = "../../assets/mine.png"; // Replace with the path to your enemy image

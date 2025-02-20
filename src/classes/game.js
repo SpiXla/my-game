@@ -2,6 +2,7 @@ import Stage1 from "./stages.js"
 
 export default class Game {
     constructor(){
+        document.body.innerHTML = ""
         this.buttonListen()
     }
 
@@ -17,7 +18,6 @@ export default class Game {
 
     
     buttonListen() {
-        console.log('salam');
         
         this.startbtn = document.createElement("button")
         this.startbtn.textContent = "Start Game"
