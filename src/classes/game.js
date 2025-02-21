@@ -3,10 +3,10 @@ import waves from "./levels.js"
 
 export default class Game {
     constructor(){
-        this.wordGroup = 10
+        this.wordGroup = 3
         this.waves = 10
         this.currentwave = 0
-        this.timer = 10000
+        this.timer = 10500
         this.buttonListen()
     }
 
@@ -17,23 +17,50 @@ export default class Game {
     }
 
     startwaves() {
-        this.delay = 2000
-        this.levels = new waves(this.timer,this.wordGroup)
-        this.wordGroup++
-        this.currentwave++
-        setTimeout(()=>{
+        this.delay = 500; 
+        this.timer = 10000;
+        this.levels = new waves(this.timer, this.wordGroup); 
+        this.wordGroup++;
+        this.currentwave++;
+    
+        setTimeout(() => {
+            let intervalId;
+    
             const checkForWords = () => {
-                const ships = document.querySelectorAll(".alive").length
+                const ships = document.querySelectorAll(".word").length;
                 if (ships == 0) {
-                    this.startwaves()
+                    clearInterval(intervalId); 
+                    this.wonWan();
                 }
-            }
-            const intervalId = setInterval(checkForWords, this.delay);
-            
+            };
+    
+            intervalId = setInterval(checkForWords, this.delay);
+    
             setTimeout(() => {
-                clearInterval(intervalId);
-            }, this.timer-this.delay);
-        },this.delay)
+                clearInterval(intervalId); 
+            }, this.timer - this.delay);
+        }, this.delay);
+    }
+    
+    wonWan() {
+        const existingWon = document.querySelector(".won-wave");
+        if (existingWon) {
+            existingWon.remove();
+        }
+    
+        const won = document.createElement("div");
+        won.classList.add("won-wave");
+        document.body.append(won);
+        won.textContent = "WAVE 000" + this.currentwave + " CLEAR";
+    
+        setTimeout(() => {
+            won.remove();
+            if (this.currentwave < 10) {
+                this.startwaves(); 
+            } else {
+                console.log("All waves completed!");
+            }
+        }, 3000);
     }
 
     resetGame() {

@@ -100,3 +100,47 @@ button:active {
         transform: scale(1);
     }
 }
+
+/* Styling for the won-wave message */
+.won-wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffcc00; /* Bright gold color */
+    text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 40px #ffaa00; /* Neon glowing effect */
+    animation: wave 2s infinite ease-in-out, fadeIn 1s ease-in-out;
+    white-space: nowrap; /* Ensures the text stays in one line */
+    z-index: 3; /* Ensure it's above other elements */
+}
+
+/* Wave animation */
+@keyframes wave {
+    0%, 100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    25% {
+        transform: translate(-50%, -52%) rotate(-2deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotate(2deg);
+    }
+    75% {
+        transform: translate(-50%, -48%) rotate(-2deg);
+    }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
