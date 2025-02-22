@@ -1,92 +1,115 @@
+
 /* Reset default margin and padding */
 body {
     margin: 0;
     padding: 0;
     background: 
-        url('./assets/stars.jpg') no-repeat center center fixed, /* Stars image */
-        linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)); /* Dark gradient overlay */
-    background-size: cover;
-    font-family: Arial, sans-serif;
+    url('./assets/stars.jpg') no-repeat center center fixed, /* Stars image */
+    linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1)); /* Dark gradient overlay */    font-family: 'Inter', sans-serif; /* Modern, clean font */
     display: flex;
     justify-content: center; /* Centers content horizontally */
-    align-items: flex-end; /* Aligns content at the bottom */
+    align-items: center; /* Centers content vertically */
     height: 100vh; /* Ensures full viewport height */
-    position: relative; /* Ensures proper positioning */
+    color: #333; /* Dark gray text for readability */
 }
 
-/* Gradient Overlay Using ::before */
-body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
-    z-index: 1;
+/* Main container for the game */
+.game-container {
+    background: #fff; /* White background for the game area */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    padding: 40px;
+    text-align: center;
+    max-width: 600px; /* Limits the width for better readability */
+    width: 90%; /* Responsive width */
 }
 
-/* Ensure the button is above the gradient overlay */
+/* Button styling */
 button {
-    background-color: #d4af37; /* Classic gold color */
-    color: #000; /* Black text for contrast */
-    border: 3px solid #a67c00; /* Dark gold border */
-    border-radius: 5px; /* Subtle rounded corners */
+    background-color: #007bff; /* Modern blue color */
+    color: #fff; /* White text */
+    border: none;
+    border-radius: 8px; /* Rounded corners */
     padding: 15px 30px;
-    font-size: 18px; /* Readable font size */
-    font-family: "Courier New", Courier, monospace; /* Monospace font */
-    font-weight: bold;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600; /* Semi-bold */
     cursor: pointer;
     text-transform: uppercase;
-    box-shadow: 0 6px #8b5e00; /* Shadow for a 3D effect */
-    transition: all 0.2s ease-in-out;
-    margin-bottom: 80px; /* Moves the button up */
-    position: relative;
-    z-index: 2; /* Ensures button stays visible */
-    animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+    transition: all 0.3s ease;
+    margin-top: 20px; /* Spacing from other elements */
 }
 
 button:hover {
-    background-color: #e5c07b; /* Lighter gold on hover */
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3); /* Soft glow on hover */
 }
 
 button:active {
-    box-shadow: 0 3px #8b5e00; /* Reduced shadow on press */
-    transform: translateY(3px); /* Pressed effect */
+    transform: translateY(0); /* Reset lift effect on click */
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3); /* Smaller shadow on click */
 }
 
 /* Word styling */
 .word-container {
-    position: absolute;
-    top: 20px; /* Position at the top */
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
-    gap: 20px;
-    z-index: 2; /* Ensures words stay above the gradient overlay */
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 .word {
-    font-size: 0,5rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    background-color: rgba(0, 0, 0, 0.7); /* Black transparent background */
-    border-radius: 5px;
-    color: #00ffcc; /* Neon cyan text color */
-    text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc; /* Glowing effect */
-    box-shadow: 0 0 10px rgba(0, 255, 204, 0.5); /* Glow around the box */
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: black; /* Light gray background */
+    border-radius: 6px;
+    color: white; /* Dark gray text */
+    padding: 10px 15px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Floating animation */
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+.word:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: #fff; /* White text on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2); /* Soft glow on hover */
+}
+
+/* Score and stats styling */
+.score-container {
+    margin-bottom: 20px;
+}
+
+.score-container h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #007bff; /* Blue color for emphasis */
+}
+
+.score-container p {
+    font-size: 1.2rem;
+    margin: 5px 0;
+    color: #666; /* Medium gray for less emphasis */
+}
+
+/* Personal best styling */
+.personal-best {
+    margin-top: 20px;
+}
+
+.personal-best h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #007bff; /* Blue color for emphasis */
+}
+
+.personal-best p {
+    font-size: 1.2rem;
+    margin: 5px 0;
+    color: #666; /* Medium gray for less emphasis */
 }
 
 /* Fade-in animation */
@@ -101,46 +124,60 @@ button:active {
     }
 }
 
-/* Styling for the won-wave message */
-.won-wave {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #ffcc00; /* Bright gold color */
-    text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 40px #ffaa00; /* Neon glowing effect */
-    animation: wave 2s infinite ease-in-out, fadeIn 1s ease-in-out;
-    white-space: nowrap; /* Ensures the text stays in one line */
-    z-index: 3; /* Ensure it's above other elements */
-}
-
-/* Wave animation */
-@keyframes wave {
+/* Floating animation */
+@keyframes float {
     0%, 100% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    25% {
-        transform: translate(-50%, -52%) rotate(-2deg);
+        transform: translateY(0);
     }
     50% {
-        transform: translate(-50%, -50%) rotate(2deg);
-    }
-    75% {
-        transform: translate(-50%, -48%) rotate(-2deg);
+        transform: translateY(-10px);
     }
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
-    }
-    to {
+/* Won-wave message styling */
+.won-wave {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #28a745; /* Green color for success */
+    animation: fadeIn 1s ease-in-out, float 2s infinite ease-in-out;
+    margin-top: 20px;
+}
+
+/* Timer styling */
+.timer {
+    font-size: 1.5rem; /* Medium font size */
+    font-weight: 600; /* Semi-bold for emphasis */
+    color: #007bff; /* Blue color to match the theme */
+    background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for spacing */
+    display: inline-block; /* Ensures the timer doesn't take full width */
+    margin-bottom: 20px; /* Spacing from other elements */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1); /* Subtle shadow */
+    animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+
+     /* Positioning */
+     position: fixed; /* Fixed position to keep it in place */
+     bottom: 20px; /* Distance from the bottom */
+     right: 370px; /* Distance from the right */
+     z-index: 1000; /* Ensures it stays on top of other elements */
+}
+
+/* Optional: Add a glowing effect when time is running low */
+.timer.low-time {
+    color: #ff4444; /* Red color for urgency */
+    background-color: rgba(255, 68, 68, 0.1); /* Light red background */
+    animation: pulse 1s infinite; /* Pulsing animation */
+}
+
+/* Pulsing animation for low time */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
     }
 }

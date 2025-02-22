@@ -6,7 +6,8 @@ export default class Game {
         this.wordGroup = 3
         this.waves = 10
         this.currentwave = 0
-        this.timer = 10500
+        this.timer = 10000;
+        this.delay = 500; 
         this.buttonListen()
     }
 
@@ -16,30 +17,42 @@ export default class Game {
         this.startwaves()
     }
 
-    startwaves() {
-        this.delay = 500; 
-        this.timer = 10000;
-        this.levels = new waves(this.timer, this.wordGroup); 
-        this.wordGroup++;
-        this.currentwave++;
-    
-        setTimeout(() => {
-            let intervalId;
-    
-            const checkForWords = () => {
-                const ships = document.querySelectorAll(".word").length;
-                if (ships == 0) {
-                    clearInterval(intervalId); 
-                    this.wonWan();
-                }
-            };
-    
-            intervalId = setInterval(checkForWords, this.delay);
-    
-            setTimeout(() => {
+startwaves() {
+    this.levels = new waves(this.timer, this.wordGroup);
+    this.wordGroup++; 
+    this.currentwave++; 
+    this.timer += 1000; 
+    setTimeout(() => {
+        let intervalId;
+        let timeoutId;
+        const checkForWords = () => {
+            const words = document.querySelectorAll(".word").length;
+            if (words === 0) {
                 clearInterval(intervalId); 
-            }, this.timer - this.delay);
-        }, this.delay);
+                clearTimeout(timeoutId); 
+                this.wonWan(); 
+            }
+        };
+        const handleWaveTimeout = () => {
+            clearInterval(intervalId); 
+            const words = document.querySelectorAll(".word").length;
+            if (words > 0) {
+                this.lost(); 
+            }
+        };
+
+        intervalId = setInterval(checkForWords, this.delay);
+        timeoutId = setTimeout(handleWaveTimeout, this.timer - this.delay);
+    }, this.delay);
+}
+
+    lost(){
+        document.body.innerHTML = ""
+        const won = document.createElement("div");
+        won.classList.add("won-wave");
+        document.body.append(won);
+        won.textContent = "YOU LOST";
+        this.resetGame()
     }
     
     wonWan() {
@@ -64,8 +77,7 @@ export default class Game {
     }
 
     resetGame() {
-        document.body.innerHTML = "";
-        this.buttonListen();
+        const ngame = new Game()
     }
 
     

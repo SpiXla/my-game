@@ -10,12 +10,29 @@ export default class waves {
         }
         this.timer = timer
         this.wordsNumer = wordsNumer
+        this.startTimer()
         this.startWave()
         this.typingListening()
     }
 
+    startTimer(){
+        const time = document.createElement("div")
+        time.classList.add("timer")
+        document.body.append(time)
+        let count = 0
+        const displayTime = ()=>{
+            let t = (this.timer - count)/1000
+            if (t <= 3) {
+                time.classList.add("low-time")
+            }
+            time.textContent = t
+            count+= 1000
+        }
+        setInterval(displayTime,1000)
+    }
+
     typingListening(){
-        document.addEventListener("keydown",(e)=>{
+        const typingGame = (e)=>{
             const k = e.key
             const words = document.querySelectorAll(".word")
             Array.from(words).forEach((r)=>{
@@ -24,15 +41,16 @@ export default class waves {
                 if (isActive == 0 ) {
                     if (k.toLocaleLowerCase() == wordC[0]){
                         r.textContent = r.textContent.slice(1)
-                        r.style.color = "#ff00cc" 
-                        r.style.textShadow = "0 0 10px #ff00cc, 0 0 20px #ff00cc" 
-                        r.style.transform = "scale(1.9)" 
+                        r.style.color = "#EB5B00" 
+                        r.style.transform = "scale(1.4)" 
                         r.classList.add("active-word")
+                        removeEventListener("keydown",typingGame)
                         this.activeWord()
                     }
                 }
             })
-        })
+        }
+        document.addEventListener("keydown",typingGame)
     }
 
     activeWord(){
@@ -41,15 +59,15 @@ export default class waves {
             let content
             if (activeWord != null) {
                 content = activeWord.textContent
-                if (content.length == 0){
-                    activeWord.remove()
-                    removeEventListener("keydown",listening)
-                }
                 if (e.key.toLocaleLowerCase() == content[0]){
                     activeWord.textContent = activeWord.textContent.slice(1)
                 }
-            }
-
+                if (activeWord.textContent.length == 0 ){
+                    activeWord.remove()
+                    removeEventListener("keydown",listening)
+                    this.typingListening()
+                }
+            }    
         }
         document.addEventListener("keydown",listening)
     }
