@@ -57,6 +57,7 @@ startwaves() {
     
     wonWan() {
         const existingWon = document.querySelector(".won-wave");
+        document.querySelector(".timer").remove()
         if (existingWon) {
             existingWon.remove();
         }
