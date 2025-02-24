@@ -1,6 +1,6 @@
 import Game from "./game.js"
 import { words,Word} from "./word.js"
-
+// import Enemy from "./enemy.js"
 
 export default class waves {
     constructor(timer, wordsNumer) {

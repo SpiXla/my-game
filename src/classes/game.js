@@ -6,7 +6,7 @@ export default class Game {
         this.wordGroup = 3
         this.waves = 10
         this.currentwave = 0
-        this.timer = 10000;
+        this.timer = 10000000000000;
         this.delay = 500;
         this.createContainer()
         this.buttonListen()
@@ -31,6 +31,8 @@ export default class Game {
 
     startwaves() {
         this.levels = new waves(this.timer, this.wordGroup);
+        console.log(this.wordGroup);
+        
         this.wordGroup++;
         this.currentwave++;
         this.timer += 1000;
