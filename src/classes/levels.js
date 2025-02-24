@@ -71,11 +71,10 @@ export default class waves {
                 if (e.key.toLocaleLowerCase() == content[0]){
                     activeWord.textContent = activeWord.textContent.slice(1)
                 }else{
-                    let count = this.heart.textContent
-                    if (count == "0"){
-                        this.resetGame()
-                    }
                     this.heart.textContent = this.heart.textContent - 1
+                    if (this.heart.textContent == "0"){
+                        this.lost()
+                    }
                 }
                 if (activeWord.textContent.length == 0 ){
                     activeWord.remove()
@@ -85,6 +84,15 @@ export default class waves {
             }    
         }
         document.addEventListener("keydown",listening)
+    }
+
+    lost() {
+        this.container.innerHTML = ""
+        const won = document.createElement("div");
+        won.classList.add("won-wave");
+        this.container.append(won);
+        won.textContent = "YOU LOST";
+        this.resetGame()
     }
 
     startWave(){
