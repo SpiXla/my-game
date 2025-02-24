@@ -1,11 +1,7 @@
-
 /* Reset default margin and padding */
 body {
     margin: 0;
     padding: 0;
-    background: 
-    url('./assets/stars.jpg') no-repeat center center fixed, /* Stars image */
-    linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1)); /* Dark gradient overlay */    font-family: 'Inter', sans-serif; /* Modern, clean font */
     display: flex;
     justify-content: center; /* Centers content horizontally */
     align-items: center; /* Centers content vertically */
@@ -14,18 +10,47 @@ body {
 }
 
 /* Main container for the game */
-.game-container {
-    background: #fff; /* White background for the game area */
-    border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+.container {
+    background-image: url(.././assets/stars.jpg);
+    background-position: center;
+    width: 500px;
+    height: 800px;  /* Fixed tall height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     padding: 40px;
-    text-align: center;
-    max-width: 600px; /* Limits the width for better readability */
-    width: 90%; /* Responsive width */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+
+
+/* Word styling */
+.container .word {
+    font-size: 1.1rem;
+    font-weight: 500;
+    background-color: black; /* Light gray background */
+    border-radius: 6px;
+    color: white; /* Dark gray text */
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: absolute;
+    z-index: 100; /* Ensures word is above other elements */
+}
+
+.container .word:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: #fff; /* White text on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2); /* Soft glow on hover */
 }
 
 /* Button styling */
-button {
+.container button {
     background-color: #007bff; /* Modern blue color */
     color: #fff; /* White text */
     border: none;
@@ -40,19 +65,54 @@ button {
     margin-top: 20px; /* Spacing from other elements */
 }
 
-button:hover {
+.container button:hover {
     background-color: #0056b3; /* Darker blue on hover */
     transform: translateY(-2px); /* Slight lift effect */
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3); /* Soft glow on hover */
 }
 
-button:active {
+.container button:active {
     transform: translateY(0); /* Reset lift effect on click */
     box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3); /* Smaller shadow on click */
 }
 
+/* Timer styling (positioned at bottom-right of container) */
+.container .timer {
+    font-size: 1.5rem; /* Medium font size */
+    font-weight: 600; /* Semi-bold for emphasis */
+    color: orange; /* Blue color to match the theme */
+    background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for spacing */
+    display: inline-block; /* Ensures the timer doesn't take full width */
+    position: absolute; /* Position relative to the container */
+    bottom: 20px; /* Distance from the bottom of the container */
+    right: 20px; /* Distance from the right of the container */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1); /* Subtle shadow */
+    z-index: 1000; /* Ensure the timer stays on top */
+}
+
+/* Optional: Add a glowing effect when time is running low */
+.container .timer.low-time {
+    color: #ff4444; /* Red color for urgency */
+    background-color: rgba(255, 68, 68, 0.1); /* Light red background */
+    animation: pulse 1s infinite; /* Pulsing animation */
+}
+
+/* Pulsing animation for low time */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
 /* Word styling */
-.word-container {
+.container .word-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -60,53 +120,35 @@ button:active {
     margin-bottom: 20px;
 }
 
-.word {
-    font-size: 1rem;
-    font-weight: 500;
-    background-color: black; /* Light gray background */
-    border-radius: 6px;
-    color: white; /* Dark gray text */
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.word:hover {
-    background-color: #007bff; /* Blue background on hover */
-    color: #fff; /* White text on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2); /* Soft glow on hover */
-}
-
 /* Score and stats styling */
-.score-container {
+.container .score-container {
     margin-bottom: 20px;
 }
 
-.score-container h1 {
+.container .score-container h1 {
     font-size: 2rem;
     margin-bottom: 10px;
     color: #007bff; /* Blue color for emphasis */
 }
 
-.score-container p {
+.container .score-container p {
     font-size: 1.2rem;
     margin: 5px 0;
     color: #666; /* Medium gray for less emphasis */
 }
 
 /* Personal best styling */
-.personal-best {
+.container .personal-best {
     margin-top: 20px;
 }
 
-.personal-best h2 {
+.container .personal-best h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
     color: #007bff; /* Blue color for emphasis */
 }
 
-.personal-best p {
+.container .personal-best p {
     font-size: 1.2rem;
     margin: 5px 0;
     color: #666; /* Medium gray for less emphasis */
@@ -135,7 +177,7 @@ button:active {
 }
 
 /* Won-wave message styling */
-.won-wave {
+.container .won-wave {
     font-size: 2rem;
     font-weight: 700;
     color: #28a745; /* Green color for success */
@@ -143,41 +185,38 @@ button:active {
     margin-top: 20px;
 }
 
-/* Timer styling */
-.timer {
-    font-size: 1.5rem; /* Medium font size */
-    font-weight: 600; /* Semi-bold for emphasis */
-    color: #007bff; /* Blue color to match the theme */
-    background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
-    border-radius: 8px; /* Rounded corners */
-    padding: 10px 20px; /* Padding for spacing */
-    display: inline-block; /* Ensures the timer doesn't take full width */
-    margin-bottom: 20px; /* Spacing from other elements */
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1); /* Subtle shadow */
-    animation: fadeIn 1s ease-in-out; /* Fade-in animation */
-
-     /* Positioning */
-     position: fixed; /* Fixed position to keep it in place */
-     bottom: 20px; /* Distance from the bottom */
-     right: 370px; /* Distance from the right */
-     z-index: 1000; /* Ensures it stays on top of other elements */
+/* Hearts container styling */
+.container .hearts {
+    position: absolute;
+    background-image: url(./assets/heart.png); /* Make sure to have the correct path to the heart image */
+    background-size: cover;
+    background-position: center;
+    font-weight: bold;
+    bottom: 20px; /* Distance from the bottom of the container */
+    left: 20px; 
+    width: 70px;  /* Adjust size as needed */
+    height: 70px; /* Adjust size as needed */
+    z-index: 10;  /* Ensure hearts appear above other elements */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* You can change this depending on text or image */
+    font-size: 20px; /* Font size for text (like the "3") */
 }
 
-/* Optional: Add a glowing effect when time is running low */
-.timer.low-time {
-    color: #ff4444; /* Red color for urgency */
-    background-color: rgba(255, 68, 68, 0.1); /* Light red background */
-    animation: pulse 1s infinite; /* Pulsing animation */
-}
 
-/* Pulsing animation for low time */
-@keyframes pulse {
+/* Floating animation */
+@keyframes float {
     0%, 100% {
-        transform: scale(1);
-        opacity: 1;
+        transform: translateY(0);
     }
     50% {
-        transform: scale(1.05);
-        opacity: 0.8;
+        transform: translateY(-10px); /* Lift effect */
     }
+}
+
+/* Optional: Add a glowing effect when hearts are clicked or hovered */
+.container .hearts:hover {
+    transform: scale(1.1);  /* Slight zoom effect on hover */
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.4); /* Red glow */
 }

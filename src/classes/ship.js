@@ -6,9 +6,10 @@ export default class Ship {
         this.duck.src = "../../assets/shipOne.png"
         this.duck.style.width = "50px"
         this.duck.style.height = "50px"
-        document.body.append(this.duck)
+        this.container = document.getElementById("container")
+        this.container.append(this.duck)
         this.duck.style.position = "absolute"
-        this.duck.style.left = Math.floor(document.width/2) + 'px';
-        this.duck.style.top =  window.innerHeight - 150 + 'px'; 
+        this.duck.style.left = Math.floor(this.container.offsetWidth/2) -30 + 'px';
+        this.duck.style.top =  this.container.offsetHeight - 100 + 'px'; 
     }
 }

@@ -8,17 +8,26 @@ export default class waves {
         if (wordsNumer>10){
             wordsNumer = 10
         }
+        this.container = document.querySelector(".container")
         this.timer = timer
         this.wordsNumer = wordsNumer
         this.startTimer()
+        this.startHearts()
         this.startWave()
         this.typingListening()
+    }
+
+    startHearts() {
+            this.heart = document.createElement("div")
+            this.heart.classList.add("hearts")
+            this.heart.textContent = "3"
+            this.container.append(this.heart)
     }
 
     startTimer(){
         const time = document.createElement("div")
         time.classList.add("timer")
-        document.body.append(time)
+        this.container.append(time)
         let count = 0
         const displayTime = ()=>{
             let t = (this.timer - count)/1000
@@ -61,6 +70,12 @@ export default class waves {
                 content = activeWord.textContent
                 if (e.key.toLocaleLowerCase() == content[0]){
                     activeWord.textContent = activeWord.textContent.slice(1)
+                }else{
+                    let count = this.heart.textContent
+                    if (count == "0"){
+                        this.resetGame()
+                    }
+                    this.heart.textContent = this.heart.textContent - 1
                 }
                 if (activeWord.textContent.length == 0 ){
                     activeWord.remove()

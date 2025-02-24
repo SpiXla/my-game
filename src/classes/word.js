@@ -13,16 +13,17 @@ export let words = [
 
 export class Word {
     constructor(content){
+        this.container = document.getElementById("container")
         this.word = document.createElement("div")
         this.word.classList.add("word") 
-        document.body.append(this.word)
+        this.container.append(this.word)
         this.word.textContent = content
         this.randomPos()
     }
 
     randomPos() {
         let x ;let y
-        x = Math.floor(Math.random() * window.innerWidth/2) + 100
+        x = Math.floor(Math.random() * (this.container.offsetWidth -50 )) 
         y = 0
         this.word.style.position = "absolute"
         this.word.style.left = x + 'px'
