@@ -1,28 +1,29 @@
 import Game from "./game.js"
 import { words,Word} from "./word.js"
-// import Enemy from "./enemy.js"
+// import Eemy from "./enemy.js"
 
 export default class waves {
-    constructor(timer, wordsNumer) {
+    constructor(timer, wordsNumer, ship) {
         this.randomWords = getRandomElements(words, wordsNumer)
         if (wordsNumer>10){
             wordsNumer = 10
         }
+        this.ship = ship
         this.container = document.querySelector(".container")
         this.timer = timer
         this.wordsNumer = wordsNumer
         this.startTimer()
-        this.startHearts()
+        // this.startHearts()
         this.startWave()
         this.typingListening()
     }
 
-    startHearts() {
-            this.heart = document.createElement("div")
-            this.heart.classList.add("hearts")
-            this.heart.textContent = "3"
-            this.container.append(this.heart)
-    }
+    // startHearts() {
+    //         this.heart = document.createElement("div")
+    //         this.heart.classList.add("hearts")
+    //         this.heart.textContent = "3"
+    //         this.container.append(this.heart)
+    // }
 
     startTimer(){
         const time = document.createElement("div")
@@ -53,6 +54,7 @@ export default class waves {
                         r.style.color = "#EB5B00" 
                         r.style.transform = "scale(1.4)" 
                         r.classList.add("active-word")
+                        this.ship.shoot(document.querySelector(".active-word"))
                         removeEventListener("keydown",typingGame)
                         this.activeWord()
                     }
@@ -70,13 +72,18 @@ export default class waves {
                 content = activeWord.textContent
                 if (e.key.toLocaleLowerCase() == content[0]){
                     activeWord.textContent = activeWord.textContent.slice(1)
-                }else{
-                    this.heart.textContent = this.heart.textContent - 1
-                    if (this.heart.textContent == "0"){
-                        this.lost()
-                    }
+                    this.ship.shoot(activeWord)
                 }
+                // }else{
+                //     this.heart.textContent = this.heart.textContent - 1
+                //     if (this.heart.textContent == "0"){
+                //         this.lost()
+                //     }
+                // }
                 if (activeWord.textContent.length == 0 ){
+                    const p = activeWord.parentNode
+                    p.remove()
+                    console.log()
                     activeWord.remove()
                     removeEventListener("keydown",listening)
                     this.typingListening()

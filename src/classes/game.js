@@ -6,7 +6,7 @@ export default class Game {
         this.wordGroup = 3
         this.waves = 10
         this.currentwave = 0
-        this.timer = 10000000000000;
+        this.timer = 10000;
         this.delay = 500;
         this.createContainer()
         this.buttonListen()
@@ -25,16 +25,18 @@ export default class Game {
 
     gameStart() {
         this.container.innerHTML = ""
-        this.ship = new Ship()
         this.startwaves()
     }
 
     startwaves() {
-        this.levels = new waves(this.timer, this.wordGroup);
-        console.log(this.wordGroup);
+        this.tyara = new Ship();
+        this.levels = new waves(this.timer, this.wordGroup,this.tyara);
         
         this.wordGroup++;
         this.currentwave++;
+        if (this.currentwave == 10) {
+            this.wonGame()
+        }
         this.timer += 1000;
         setTimeout(() => {
             let intervalId;
@@ -59,6 +61,14 @@ export default class Game {
             timeoutId = setTimeout(handleWaveTimeout, this.timer - this.delay);
         }, this.delay);
     }
+    wonGame() {
+        this.container.innerHTML = ""
+        const won = document.createElement("div");
+        won.classList.add("won-wave");
+        this.container.append(won);
+        won.textContent = "YOU Win Congrats!!!";
+        this.resetGame()
+    }
 
     lost() {
         this.container.innerHTML = ""
@@ -71,18 +81,30 @@ export default class Game {
 
     wonWan() {
         const existingWon = document.querySelector(".won-wave");
-        document.querySelector(".timer").remove()
-        if (existingWon) {
-            existingWon.remove();
-        }
-
+        const ship = document.querySelector(".ship");
+        const existt = document.querySelector(".timer");
+        
+        // Clean up elements
+        if (ship) ship.remove();
+        if (existt) existt.remove();
+        if (existingWon) existingWon.remove();
+    
+        // Create wave clear message
         const won = document.createElement("div");
         won.classList.add("won-wave");
         this.container.append(won);
         won.textContent = "WAVE 000" + this.currentwave + " CLEAR";
-
+    
+        // Clean container but keep the won message
         setTimeout(() => {
             won.remove();
+            // Clear any remaining elements from previous wave
+            const words = document.querySelectorAll(".word");
+            words.forEach(word => {
+                const parentDiv = word.parentNode;
+                if (parentDiv) parentDiv.remove();
+            });
+            
             if (this.currentwave < 10) {
                 this.startwaves();
             } else {
@@ -90,7 +112,6 @@ export default class Game {
             }
         }, 3000);
     }
-
     resetGame() {
         const ngame = new Game()
     }

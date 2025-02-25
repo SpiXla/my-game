@@ -51,7 +51,7 @@ export class Word {
     move() {
         const moveEnemy = () => {
             if (this.div) {
-                this.speed = 2
+                this.speed = 1
                 // Get the container's position
                 const containerRect = this.container.getBoundingClientRect();
 
