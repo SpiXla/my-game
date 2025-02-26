@@ -3,7 +3,7 @@
 export default class Enemy {
     constructor(ship) {
         this.ship = ship; // Reference to the player's ship
-        this.speed = 2; // Speed of the enemy movement
+        this.speed = 10; // Speed of the enemy movement
         this.chacha = document.getElementById("container")    
         this.container = document.createElement("div");
         this.container.classList.add("enemy_container")
