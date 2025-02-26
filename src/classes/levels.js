@@ -45,39 +45,36 @@ export default class Waves {
         if (this.IsGameOver) return;
         const k = e.key.toLowerCase();
 
-        // Debounce the keydown event to reduce unnecessary calls
-        clearTimeout(this.typingTimeout);
-        this.typingTimeout = setTimeout(() => {
-            if (!this.activeWord) {
-                const enemyContainers = document.querySelectorAll(".enemy_container");
-                for (const container of enemyContainers) {
-                    const wordElement = container.querySelector(".word");
-                    if (wordElement && wordElement.textContent[0] === k) {
-                        this.activeWord = wordElement;
-                        break;
-                    }
+        if (!this.activeWord) {
+            const enemyContainers = document.querySelectorAll(".enemy_container");
+            for (const container of enemyContainers) {
+                const wordElement = container.querySelector(".word");
+                if (wordElement && wordElement.textContent[0] === k) {
+                    this.activeWord = wordElement;
+                    break;
                 }
             }
+        }
 
-            // If we have an active word and it's a match
-            if (this.activeWord && this.activeWord.textContent.length !== 0 && this.activeWord.textContent[0] === k) {
-                const lweqt = this.ship.shoot(this.activeWord);
-                this.removeChar(this.activeWord, lweqt); // Directly update the word's content
+        // might wanna check another way to not have the delay o function firing
+        if (this.activeWord && this.activeWord.textContent.length !== 0 && this.activeWord.textContent[0] === k) {
+            const lweqt = this.ship.shoot(this.activeWord);
+            this.removeChar(this.activeWord, lweqt);
 
-                // If the active word is fully matched (length is 0), remove it
-                if (this.activeWord.textContent.length === 0) {
+            if (this.activeWord.textContent.length === 1) {
+                setTimeout(() => {
                     this.activeWord.parentElement.remove();
                     this.activeWord = null;
-                }
+                }, lweqt);
+
             }
-        }, 100);  // Debounce delay of 100ms
+        }
     }
 
-    // Synchronously remove the first character after the specified delay
     removeChar(wordElement, delay) {
         setTimeout(() => {
-            wordElement.textContent = wordElement.textContent.slice(1); // Remove the first character
-        }, delay); // The time to wait before slicing the word
+            wordElement.textContent = wordElement.textContent.slice(1);
+        }, delay);
     }
 
     spawnWave() {
@@ -120,6 +117,8 @@ export default class Waves {
                     enemyRect.right >= shipRect.left &&
                     enemyRect.left <= shipRect.right
                 ) {
+                console.log('************mok************');
+
                     this.lost();
                 }
             });
