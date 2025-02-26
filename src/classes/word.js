@@ -52,7 +52,7 @@ export class Word {
             this.isAlive = false;
             setTimeout(() => {
                 this.div.remove();
-            }, 100);
+            }, 50);
         }
     }
 

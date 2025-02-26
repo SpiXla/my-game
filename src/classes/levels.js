@@ -110,8 +110,7 @@ export default class Waves {
             if (!shipElement) return
             const shipRect = shipElement.getBoundingClientRect()
             enemies.forEach((enemy) => {
-                const enemyRect = enemy.parentNode.getBoundingClientRect()
-                // console.log(enemyRect, shipRect);
+                const enemyRect = enemy.parentElement.getBoundingClientRect()
                 
                 if (
                     enemyRect.bottom >= shipRect.top &&
@@ -119,6 +118,7 @@ export default class Waves {
                     enemyRect.right >= shipRect.left &&
                     enemyRect.left <= shipRect.right
                 ) {
+                    console.log(enemyRect, shipRect)
                 console.log('************mok************')
 
                     this.lost()

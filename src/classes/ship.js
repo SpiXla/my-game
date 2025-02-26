@@ -54,7 +54,7 @@ export default class Ship {
         const directionY = dy / distance;
 
         // Define bullet speed (pixels per frame)
-        const speed = 10; // Adjust speed as needed
+        const speed = 70; // Adjust speed as needed
 
         // Calculate travel time in milliseconds
         const timeToHit = (distance / speed) * 16; // 16ms per frame (60 FPS)
