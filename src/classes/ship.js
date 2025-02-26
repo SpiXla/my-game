@@ -53,7 +53,7 @@ export default class Ship {
         const directionY = dy / distance;
     
         // Define bullet speed (pixels per frame)
-        const speed = 20; // Adjust speed as needed
+        const speed = 30; // Adjust speed as needed
     
         // Calculate travel time in milliseconds
         const timeToHit = (distance / speed) * 16; // 16ms per frame (60 FPS)
@@ -85,7 +85,7 @@ export default class Ship {
             ) {
                 console.log("Collision detected!");
                 bullet.remove();
-                elem.remove(); // Remove the enemy
+                // elem.remove(); // Remove the enemy
                 return;
             }
     

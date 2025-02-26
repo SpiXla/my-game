@@ -1,5 +1,6 @@
 import { words, Word } from "./word.js";
 // import ship from "./ship.js";
+
 export default class Waves {
     constructor(timer, wordsNumer, ship) {
         this.IsGameOver = false;
@@ -10,6 +11,7 @@ export default class Waves {
         this.wordsNumer = Math.min(wordsNumer, 10);
         this.enemyCount = 0;
         this.activeWord = null;
+        this.typingTimeout = null;  // Move typingTimeout to class level
         this.startTimer();
         this.spawnWave();
         this.typingListening();
@@ -36,9 +38,16 @@ export default class Waves {
     }
 
     typingListening() {
-        document.addEventListener("keydown", (e) => {
-            if (this.IsGameOver) return;
-            const k = e.key.toLowerCase();
+        document.addEventListener("keydown", this.handleKeyDown);
+    }
+
+    handleKeyDown = (e) => {
+        if (this.IsGameOver) return;
+        const k = e.key.toLowerCase();
+
+        // Debounce the keydown event to reduce unnecessary calls
+        clearTimeout(this.typingTimeout);
+        this.typingTimeout = setTimeout(() => {
             if (!this.activeWord) {
                 const enemyContainers = document.querySelectorAll(".enemy_container");
                 for (const container of enemyContainers) {
@@ -49,15 +58,26 @@ export default class Waves {
                     }
                 }
             }
-            if (this.activeWord && this.activeWord.textContent[0] === k) {
-               const lweqt =  this.ship.shoot(this.activeWord)
-               setTimeout(()=> (this.activeWord.textContent = this.activeWord.textContent.slice(1)), lweqt)
+
+            // If we have an active word and it's a match
+            if (this.activeWord && this.activeWord.textContent.length !== 0 && this.activeWord.textContent[0] === k) {
+                const lweqt = this.ship.shoot(this.activeWord);
+                this.removeChar(this.activeWord, lweqt); // Directly update the word's content
+
+                // If the active word is fully matched (length is 0), remove it
                 if (this.activeWord.textContent.length === 0) {
                     this.activeWord.parentElement.remove();
                     this.activeWord = null;
                 }
             }
-        });
+        }, 100);  // Debounce delay of 100ms
+    }
+
+    // Synchronously remove the first character after the specified delay
+    removeChar(wordElement, delay) {
+        setTimeout(() => {
+            wordElement.textContent = wordElement.textContent.slice(1); // Remove the first character
+        }, delay); // The time to wait before slicing the word
     }
 
     spawnWave() {
@@ -82,11 +102,11 @@ export default class Waves {
         lostMessage.textContent = "YOU LOST";
         this.container.append(lostMessage);
         clearInterval(this.timerInterval);
-        document.removeEventListener("keydown", this.typingListening);
+        document.removeEventListener("keydown", this.handleKeyDown); // Correctly remove the event listener
     }
 
     checkCollisions() {
-        setInterval(() => {
+        const check = () => {
             if (this.IsGameOver) return;
             const enemies = document.querySelectorAll(".word");
             const shipElement = document.querySelector(".ship");
@@ -103,7 +123,11 @@ export default class Waves {
                     this.lost();
                 }
             });
-        }, 100);
+            if (!this.IsGameOver) {
+                requestAnimationFrame(check); // Use requestAnimationFrame for smoother checking
+            }
+        };
+        requestAnimationFrame(check);
     }
 
     resetGame() {
