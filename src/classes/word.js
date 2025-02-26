@@ -78,10 +78,10 @@ export class Word {
             const shipRectAdjusted = this.ship.getBoundingClientRect();
 
             if (
-                enemyRect.left < shipRectAdjusted.right &&
-                enemyRect.right > shipRectAdjusted.left &&
-                enemyRect.top < shipRectAdjusted.bottom &&
-                enemyRect.bottom > shipRectAdjusted.top
+                enemyRect.left <= shipRectAdjusted.right &&
+                enemyRect.right >= shipRectAdjusted.left &&
+                enemyRect.top <= shipRectAdjusted.bottom &&
+                enemyRect.bottom >= shipRectAdjusted.top
             ) {
                 this.destroy();
             } else {

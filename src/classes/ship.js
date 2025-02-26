@@ -89,7 +89,7 @@ export default class Ship {
                 return;
             }
     
-            // If bullet moves out of screen, remove it
+            // If bullet moves out of screen
             if (
                 bulletX < 0 ||
                 bulletX > this.container.offsetWidth ||

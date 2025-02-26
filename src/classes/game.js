@@ -39,7 +39,7 @@ export default class Game {
         this.resetGame();
     }
 
-    lost() {
+        lost() {
         this.container.innerHTML = "";
         const lostMessage = document.createElement("div");
         lostMessage.classList.add("won-wave");
