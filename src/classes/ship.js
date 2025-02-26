@@ -20,24 +20,22 @@ export default class Ship {
             return;
         }
     
-        // Create a bullet element using an image
+        // Create a bullet element
         const bullet = document.createElement("img");
         bullet.classList.add("bullet");
-        bullet.src = "../../assets/plasma.png"; // Path to bullet image
+        bullet.src = "../../assets/plasma.png"; // Bullet image
         bullet.style.position = "absolute";
         bullet.style.width = "40px";
         bullet.style.height = "40px";
         bullet.style.zIndex = "1000";
-    
-        // Append bullet to the container
         this.container.append(bullet);
     
-        // Get the container's position
+        // Get container and element positions
         const containerRect = this.container.getBoundingClientRect();
         const shipRect = this.ship.getBoundingClientRect();
         const targetRect = elem.getBoundingClientRect();
     
-        // Calculate ship and target positions relative to the container
+        // Calculate positions relative to the container
         const shipX = shipRect.left - containerRect.left + shipRect.width / 2;
         const shipY = shipRect.top - containerRect.top + shipRect.height / 2;
         const targetX = targetRect.left - containerRect.left + targetRect.width / 2;
@@ -54,12 +52,19 @@ export default class Ship {
         const directionX = dx / distance;
         const directionY = dy / distance;
     
+        // Define bullet speed (pixels per frame)
+        const speed = 20; // Adjust speed as needed
+    
+        // Calculate travel time in milliseconds
+        const timeToHit = (distance / speed) * 16; // 16ms per frame (60 FPS)
+        console.log(`Bullet will hit in: ${timeToHit.toFixed(2)} ms`);
+    
         // Rotate ship towards target
         const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
         this.ship.style.transform = `rotate(${angle}deg)`;
+        bullet.style.transform = `rotate(${angle}deg)`;
     
         // Move the bullet
-        const speed = 5; // Lower speed for smoother movement
         const moveBullet = () => {
             const bulletX = parseFloat(bullet.style.left);
             const bulletY = parseFloat(bullet.style.top);
@@ -68,22 +73,47 @@ export default class Ship {
             bullet.style.left = `${bulletX + directionX * speed}px`;
             bullet.style.top = `${bulletY + directionY * speed}px`;
     
-            // Check if bullet reaches target
-            const remainingDistance = Math.sqrt(
-                Math.pow(targetX - bulletX, 2) + Math.pow(targetY - bulletY, 2)
-            );
+            // Check for collision
+            const bulletRect = bullet.getBoundingClientRect();
+            const enemyRect = elem.getBoundingClientRect();
     
-            if (remainingDistance < 10) { // Slightly increased threshold
+            if (
+                bulletRect.left < enemyRect.right &&
+                bulletRect.right > enemyRect.left &&
+                bulletRect.top < enemyRect.bottom &&
+                bulletRect.bottom > enemyRect.top
+            ) {
+                console.log("Collision detected!");
                 bullet.remove();
-                elem.remove();
-                console.log("Target hit!");
-            } else {
-                requestAnimationFrame(moveBullet);
+                elem.remove(); // Remove the enemy
+                return;
             }
+    
+            // If bullet moves out of screen, remove it
+            if (
+                bulletX < 0 ||
+                bulletX > this.container.offsetWidth ||
+                bulletY < 0 ||
+                bulletY > this.container.offsetHeight
+            ) {
+                bullet.remove();
+                return;
+            }
+    
+            requestAnimationFrame(moveBullet);
         };
     
+        // Trigger any other functions based on `timeToHit`
+        setTimeout(() => {
+            console.log("Time-based event triggered!");
+        }, timeToHit);
+    
         moveBullet(); // Start movement
+    
+        return timeToHit; // Return the time it takes to hit
     }
+    
+    
     
     
 }

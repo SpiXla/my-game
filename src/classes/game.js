@@ -9,7 +9,7 @@ export default class Game {
         this.timer = 1000000;
         this.createContainer();
         this.buttonListen();
-        this.levels = null; // Declare levels here to maintain a single instance
+        this.levels = null;
     }
 
     createContainer() {
@@ -24,52 +24,11 @@ export default class Game {
     }
 
     gameStart() {
-        this.resetGame(); // Reset game state before starting
+        this.resetGame();
         this.container.innerHTML = "";
-        this.tyara = new Ship(); // Create the ship instance
-        this.levels = new Waves(this.timer, this.wordGroup, this.tyara); // Create waves instance        
-        // this.startWaves();
+        this.tyara = new Ship();
+        this.levels = new Waves(this.timer, this.wordGroup, this.tyara);
     }
-
-    // startWaves() {
-    //     if (this.levels.IsGameOver) {
-    //         console.log('mamak');
-            
-    //         this.lost();
-    //         return;
-    //     }
-
-    //     this.wordGroup++;
-    //     this.currentwave++;
-    //     if (this.currentwave === 10) {
-    //         this.wonGame();
-    //         return;
-    //     }
-    //     this.timer += 1000;
-
-    //     setTimeout(() => {
-           
-
-    //         const intervalId = setInterval(() => {
-    //             const words = document.querySelectorAll(".word").length;
-    //             if (words === 0) {
-    //                 clearInterval(intervalId);
-    //                 this.wonWave();
-    //             }
-    //         }, this.delay);
-
-    //         const timeoutId = setTimeout(() => {
-    //             clearInterval(intervalId);
-    //             const words = document.querySelectorAll(".word").length;
-    //             if (words > 0) {
-    //                 console.log('mmm');
-                    
-    //                 this.levels.lost(); // Set the game over state in the levels instance
-    //                 this.lost();
-    //             }
-    //         }, this.timer - this.delay);
-    //     }, this.delay);
-    // }
 
     wonGame() {
         this.container.innerHTML = "";
@@ -93,30 +52,27 @@ export default class Game {
         const existingWon = document.querySelector(".won-wave");
         const ship = document.querySelector(".ship");
         const timerElement = document.querySelector(".timer");
-
-        // Clean up elements
+        
         if (ship) ship.remove();
         if (timerElement) timerElement.remove();
         if (existingWon) existingWon.remove();
 
-        // Create wave clear message
         const won = document.createElement("div");
         won.classList.add("won-wave");
         this.container.append(won);
         won.textContent = `WAVE 000${this.currentwave} CLEAR`;
 
-        // Clean container but keep the won message
         setTimeout(() => {
             won.remove();
-            // Clear any remaining elements from previous wave
+            
             const words = document.querySelectorAll(".word");
             words.forEach(word => {
                 const parentDiv = word.parentNode;
                 if (parentDiv) parentDiv.remove();
             });
-
+            
             if (this.currentwave < 10) {
-                this.startWaves(); // Start next wave
+                this.startWaves();
             } else {
                 console.log("All waves completed!");
             }
@@ -124,10 +80,10 @@ export default class Game {
     }
 
     resetGame() {
-        this.wordGroup = 10; // Reset word group
-        this.currentwave = 0; // Reset current wave
-        this.timer = 1000000; // Reset timer
-        this.levels = null; // Reset levels to allow new instance creation on the next game start
+        this.wordGroup = 10;
+        this.currentwave = 0;
+        this.timer = 1000000;
+        this.levels = null;
     }
 
     buttonListen() {

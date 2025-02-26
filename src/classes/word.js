@@ -12,28 +12,25 @@ export let words = [
 
 export class Word {
     constructor(content) {
-        this.isAlive = true
+        this.isAlive = true;
         this.ship = document.querySelector('.ship');
         this.container = document.getElementById("container");
         this.div = document.createElement("div");
         this.div.style.width = '70px';
         this.div.style.height = '70px';
         this.div.classList.add("enemy_container");
-
         this.enemy = document.createElement('img');
         this.enemy.classList.add("enemy", "alive");
-        this.enemy.src = "../../assets/mine.png";  // Path to your enemy image
+        this.enemy.src = "../../assets/mine.png";
         this.enemy.style.position = "absolute";
         this.enemy.style.width = "50px";
         this.enemy.style.height = "50px";
         this.div.append(this.enemy);
-
         this.word = document.createElement("div");
         this.word.classList.add("word");
         this.word.textContent = content;
         this.div.append(this.word);
         this.container.append(this.div);
-
         this.randomPos();
         this.move();
     }
@@ -48,46 +45,37 @@ export class Word {
 
     destroy() {
         if (this.enemy.classList.contains("alive")) {
-            this.enemy.classList.remove("alive"); // Mark as dead
-            this.enemy.src = "../../assets/explosion-huge.png"; // Path to your explosion image
+            this.enemy.classList.remove("alive");
+            this.enemy.src = "../../assets/explosion-huge.png";
             this.enemy.style.width = "70px";
             this.enemy.style.height = "70px";
-            // Optional: Set a flag to stop movement
             this.isAlive = false;
-
             setTimeout(() => {
-                this.div.remove(); // Remove after explosion
-            }, 100); // Increase time if necessary to see explosion
+                this.div.remove();
+            }, 100);
         }
     }
 
     move() {
         const moveEnemy = () => {
-            if (!this.isAlive) return; // Stop if not alive
-            this.speed = 1
+            if (!this.isAlive) return;
+            this.speed = 1;
             const containerRect = this.container.getBoundingClientRect();
             const currentLeft = parseFloat(this.div.style.left);
             const currentTop = parseFloat(this.div.style.top);
             const shipRect = this.ship.getBoundingClientRect();
             const shipX = shipRect.left - containerRect.left;
             const shipY = shipRect.top - containerRect.top;
-
             const dx = shipX - currentLeft;
             const dy = shipY - currentTop;
             const distance = Math.sqrt(dx * dx + dy * dy);
             const directionX = dx / distance;
             const directionY = dy / distance;
-
             this.div.style.left = `${currentLeft + directionX * this.speed}px`;
             this.div.style.top = `${currentTop + directionY * this.speed}px`;
 
-            // Collision detection
             const enemyRect = this.enemy.getBoundingClientRect();
             const shipRectAdjusted = this.ship.getBoundingClientRect();
-
-            // Log positions
-            // console.log(`Enemy Position: ${enemyRect.left}, ${enemyRect.right}, ${enemyRect.top}, ${enemyRect.bottom}`);
-            // console.log(`Ship Position: ${shipRectAdjusted.left}, ${shipRectAdjusted.right}, ${shipRectAdjusted.top}, ${shipRectAdjusted.bottom}`);
 
             if (
                 enemyRect.left < shipRectAdjusted.right &&
@@ -97,13 +85,9 @@ export class Word {
             ) {
                 this.destroy();
             } else {
-                requestAnimationFrame(moveEnemy); // Continue moving if alive
+                requestAnimationFrame(moveEnemy);
             }
         };
-
         moveEnemy();
     }
-
-
-
 }
