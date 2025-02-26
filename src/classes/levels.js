@@ -85,7 +85,7 @@ export default class Waves {
             new Word(wordContent)
             this.enemyCount++
             const currentWords = this.container.querySelectorAll(".word")
-            const delay = currentWords.length >= 6 ? 2500 : 1500
+            const delay = currentWords.length >= 6 ? 3500 : 2500
             setTimeout(spawnNextWord, delay)
         }
         spawnNextWord()
