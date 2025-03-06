@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OOP Game</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brick Breaker Game</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <script type="module" src="./src/main.js"></script>
+  <div class="game-container">
+    <div class="paddle"></div>
+    <div class="ball"></div>
+    <div class="bricks"></div>
+  </div>
+
+  <!-- Start Button -->
+  <button id="startButton">Start Game</button>
+
+  <!-- Pause Menu -->
+  <div id="pauseMenu" class="pause-menu">
+    <h2>Paused</h2>
+    <button id="resumeButton">Resume</button>
+    <button id="restartButton">Restart</button>
+  </div>
+
+  <script src="main.js"></script>
 </body>
 </html>

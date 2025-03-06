@@ -1,0 +1,111 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+  }
+  
+  /* Larger Game Container */
+  .game-container {
+    position: relative;
+    width: 1200px; /* Increased width */
+    height: 800px; /* Increased height */
+    background-color: #111;
+    overflow: hidden;
+  }
+  
+  /* Paddle */
+  .paddle {
+    position: absolute;
+    bottom: 20px; /* Position at the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px; /* Increased paddle width */
+    height: 20px; /* Increased paddle height */
+    background-color: #fff;
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  /* Ball */
+  .ball {
+    position: absolute;
+    bottom: 100px; /* Adjusted position */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px; /* Increased ball size */
+    height: 30px; /* Increased ball size */
+    background-color: #ff0;
+    border-radius: 50%;
+  }
+  
+  /* Bricks */
+  .bricks {
+    position: absolute;
+    top: 50px; /* Adjusted position */
+    left: 50px; /* Adjusted position */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Increased gap between bricks */
+  }
+  
+  .brick {
+    width: 100px; /* Increased brick width */
+    height: 40px; /* Increased brick height */
+    background-color: #f00;
+    border-radius: 5px; /* Rounded corners */
+  }
+  
+  /* Start Button */
+  #startButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px; /* Larger button */
+    font-size: 30px; /* Larger font */
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  #startButton:hover {
+    background-color: #45a049;
+  }
+  
+  /* Pause Menu */
+  .pause-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 40px; /* Larger padding */
+    border-radius: 20px; /* Rounded corners */
+    text-align: center;
+    display: none; /* Hidden by default */
+  }
+  
+  .pause-menu h2 {
+    color: white;
+    font-size: 40px; /* Larger font */
+    margin-bottom: 30px; /* More spacing */
+  }
+  
+  .pause-menu button {
+    padding: 15px 30px; /* Larger buttons */
+    font-size: 24px; /* Larger font */
+    margin: 10px; /* More spacing */
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .pause-menu button:hover {
+    background-color: #45a049;
+  }
