@@ -1,28 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brick Breaker Game</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            background-color: #f5f5f5;
+            overflow: hidden;
+            border: 4px solid #999;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Player styling */
+        #player {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #333;
+            border-radius: 3px;
+            transition: transform 0.05s linear;
+            z-index: 10;
+        }
+        
+        #player.facing-left {
+            transform: scaleX(-1);
+        }
+        
+        /* Map elements styling */
+        .platform {
+            position: absolute;
+            background-color: #999;
+            border: 2px solid #777;
+        }
+        
+        .collectible {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            z-index: 5;
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        .yellow-gem {
+            background-color: gold;
+            box-shadow: 0 0 10px gold;
+        }
+        
+        .red-gem {
+            background-color: #ff5555;
+            box-shadow: 0 0 10px #ff5555;
+        }
+        
+        .blue-gem {
+            background-color: #55aaff;
+            box-shadow: 0 0 10px #55aaff;
+        }
+        
+        .tree {
+            position: absolute;
+            z-index: 2;
+        }
+        
+        .tree.small {
+            width: 30px;
+            height: 50px;
+            background: linear-gradient(to top, #8B4513 0%, #8B4513 30%, #228B22 30%, #228B22 100%);
+        }
+        
+        .tree.medium {
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(to top, #8B4513 0%, #8B4513 30%, #32CD32 30%, #32CD32 100%);
+        }
+        
+        .tree.large {
+            width: 90px;
+            height: 120px;
+            background: linear-gradient(to top, #8B4513 0%, #8B4513 30%, #006400 30%, #006400 100%);
+        }
+        
+        .exit {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #ff0077;
+            border-radius: 50%;
+            z-index: 3;
+            animation: pulse 1s infinite alternate;
+        }
+        
+        /* UI Elements */
+        .game-ui {
+            position: absolute;
+            padding: 10px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 100;
+        }
+        
+        #score {
+            top: 10px;
+            left: 10px;
+        }
+        
+        #lives {
+            top: 10px;
+            right: 10px;
+        }
+        
+        .game-over, .level-complete {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 0.8; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-  <div class="game-container">
-    <div class="paddle"></div>
-    <div class="ball"></div>
-    <div class="bricks"></div>
-  </div>
-
-  <!-- Start Button -->
-  <button id="startButton">Start Game</button>
-
-  <!-- Pause Menu -->
-  <div id="pauseMenu" class="pause-menu">
-    <h2>Paused</h2>
-    <button id="resumeButton">Resume</button>
-    <button id="restartButton">Restart</button>
-  </div>
-
-  <script src="main.js"></script>
+    <div id="game-container">
+        <div id="player"></div>
+    </div>
+    
+    <script type="module">
+        import { Game } from "./game.js";
+        
+        // Initialize the game when the DOM is loaded
+        document.addEventListener("DOMContentLoaded", () => {
+            const game = new Game();
+        });
+    </script>
 </body>
 </html>
