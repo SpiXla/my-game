@@ -21,6 +21,8 @@ export class Player {
         this.onGround = false
         this.facing = "right"
         this.keys = {}
+        this.power = ''
+        this.wasSpacePressed = false
 
         this.initControls()
         this.update()
@@ -41,8 +43,9 @@ export class Player {
     }
 
     move(mapCollisions) {
-        // const prevX = this.x
-        // const prevY = this.y
+        if (mapCollisions.name === 'air-power') {
+            this.power = 'air-power'
+        }
 
         if (this.keys["ArrowRight"]) {
             this.velocityX += this.velocity
@@ -53,12 +56,20 @@ export class Player {
             this.facing = "left"
         }
 
-        if ((this.keys["ArrowUp"] ) &&
-            (mapCollisions.onGround)) {
-            this.velocityY = -this.jumpStrength
+        if (this.keys["ArrowUp"] && (mapCollisions.onGround)) {
+            this.velocityY = -this.jumpStrength            
             this.isJumping = true
             this.onGround = false
         }
+        
+        const isSpacePressed = this.keys[' '];
+        if (isSpacePressed && !this.wasSpacePressed && this.power === 'air-power') {
+            this.velocityY = -this.jumpStrength            
+            this.isJumping = true
+            this.onGround = false
+            this.power = ''  
+        }
+        this.wasSpacePressed = isSpacePressed;
 
         this.velocityX *= this.friction
         this.velocityY += this.gravity
@@ -69,7 +80,6 @@ export class Player {
         }
 
         this.x += this.velocityX
-
         this.y += this.velocityY
 
         this.onGround = mapCollisions.onGround
@@ -106,6 +116,7 @@ export class Player {
         this.y = this.containerHeight - 100
         this.velocityX = 0
         this.velocityY = 0
+        this.power = ''
         this.updatePosition()
     }
 }

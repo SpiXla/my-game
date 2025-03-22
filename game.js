@@ -90,7 +90,7 @@ export class Game {
             this.updateScore(points);
             
             // Play collection sound effect
-            this.playSound("collect");
+            // this.playSound("collect");
         } else if (mapCollisions.type === "exit") {
             if (this.gemsCollected >= this.totalGems) {
                 // Level complete!
