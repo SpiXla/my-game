@@ -23,6 +23,7 @@ export class Player {
         this.keys = {}
         this.power = ''
         this.wasSpacePressed = false
+        this.canShootFireball = false
 
         this.initControls()
         this.update()
@@ -47,6 +48,10 @@ export class Player {
             this.power = 'air-power'
         }
 
+        if (mapCollisions.name === 'teleport-power') {
+            this.power = 'magic-power'
+        }
+
         if (this.keys["ArrowRight"]) {
             this.velocityX += this.velocity
             this.facing = "right"
@@ -57,17 +62,24 @@ export class Player {
         }
 
         if (this.keys["ArrowUp"] && (mapCollisions.onGround)) {
-            this.velocityY = -this.jumpStrength            
+            this.velocityY = -this.jumpStrength
             this.isJumping = true
             this.onGround = false
         }
-        
+
         const isSpacePressed = this.keys[' '];
-        if (isSpacePressed && !this.wasSpacePressed && this.power === 'air-power') {
-            this.velocityY = -this.jumpStrength            
-            this.isJumping = true
-            this.onGround = false
-            this.power = ''  
+        if (isSpacePressed && !this.wasSpacePressed) {
+
+            if (this.power === 'air-power') {
+                this.velocityY = -this.jumpStrength
+                this.isJumping = true
+                this.onGround = false
+                this.power = ''
+            } else if (this.power == 'magic-power') {
+                this.shootFireball()
+
+
+            }
         }
         this.wasSpacePressed = isSpacePressed;
 
@@ -94,14 +106,31 @@ export class Player {
         }
     }
 
+    shootFireball() {
+        const fireballX = this.facing === 'right'
+            ? this.x + this.width
+            : this.x - 15;
+
+        const fireballY = this.y + this.height / 2;
+
+        const fireballEvent = new CustomEvent('shoot-fireball', {
+            detail: {
+                x: fireballX,
+                y: fireballY,
+                direction: this.facing
+            }
+        });
+        this.power = ''
+        document.dispatchEvent(fireballEvent);
+    }
+
     updatePosition() {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
 
-        // Update facing direction visually
         if (this.facing === "left") {
             this.element.classList.add("facing-left")
         } else {
-            this.element.classList.remove("facing-right")
+            this.element.classList.remove("facing-left")
         }
     }
 
@@ -117,6 +146,7 @@ export class Player {
         this.velocityX = 0
         this.velocityY = 0
         this.power = ''
+        this.canShootFireball = false
         this.updatePosition()
     }
 }

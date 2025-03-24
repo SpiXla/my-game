@@ -5,6 +5,7 @@ export class LevelMap {
         this.collectibles = []
         this.trees = []
         this.exits = []
+        this.fireballs = []  // Array to track fireballs
 
         this.width = this.container.clientWidth
         this.height = this.container.clientHeight
@@ -15,8 +16,8 @@ export class LevelMap {
     createPlatform(x, y, width, height) {
         const platform = document.createElement("div")
         platform.classList.add("platform")
-        platform.style.left = `${x}px`
-        platform.style.top = `${y}px`
+        platform.style.transform = `translate(${x}px, ${y}px)`
+        
         platform.style.width = `${width}px`
         platform.style.height = `${height}px`
 
@@ -32,11 +33,6 @@ export class LevelMap {
 
         return platform
     }
-
-
-    // createPowerups(){
-
-    // }
 
     createCollectible(x, y, type = "gem") {
         const collectible = document.createElement("div")
@@ -64,29 +60,6 @@ export class LevelMap {
         return collectible
     }
 
-    // createTree(x, y, size = "medium") {
-    //     const tree = document.createElement("div")
-    //     tree.classList.add("tree")
-    //     tree.classList.add(size)
-    //     tree.style.left = `${x}px`
-    //     tree.style.top = `${y}px`
-
-    //     this.container.appendChild(tree)
-
-    //     const treeWidth = size === "small" ? 30 : size === "medium" ? 60 : 90
-    //     const treeHeight = size === "small" ? 50 : size === "medium" ? 80 : 120
-
-    //     this.trees.push({
-    //         element: tree,
-    //         x,
-    //         y,
-    //         width: treeWidth,
-    //         height: treeHeight
-    //     })
-
-    //     return tree
-    // }
-
     createExit(x, y) {
         const exit = document.createElement("div")
         exit.classList.add("exit")
@@ -106,6 +79,65 @@ export class LevelMap {
         return exit
     }
 
+    createFireball(x, y, direction) {
+        const fireball = document.createElement("div")
+        fireball.classList.add("fireball")
+        fireball.style.left = `${x}px`
+        fireball.style.top = `${y}px`
+
+        this.container.appendChild(fireball)
+
+        const fireBallObj = {
+            element: fireball,
+            x,
+            y,
+            width: 15,
+            height: 15,
+            direction,
+            speed: 10
+        }
+
+        this.fireballs.push(fireBallObj)
+        return fireBallObj
+    }
+
+    updateFireballs() {//might wanna use transform here
+        for (let i = this.fireballs.length - 1; i >= 0; i--) {
+            const fireball = this.fireballs[i]
+            
+            // Move fireball
+            if (fireball.direction === 'right') {
+                fireball.x += fireball.speed
+            } else {
+                fireball.x -= fireball.speed
+            }
+
+            // Update visual position
+            fireball.element.style.left = `${fireball.x}px`
+            fireball.element.style.top = `${fireball.y}px`
+
+            // Remove fireball if it goes off screen
+            if (fireball.x < 0 || fireball.x > this.width) {
+                this.container.removeChild(fireball.element)
+                this.fireballs.splice(i, 1)
+            }
+
+            // Check fireball collisions with platforms
+            for (const platform of this.platforms) {
+                if (fireball.x < platform.x + platform.width &&
+                    fireball.x + fireball.width > platform.x &&
+                    fireball.y < platform.y + platform.height &&
+                    fireball.y + fireball.height > platform.y) {
+                    
+                    // Remove fireball on platform collision
+                    this.container.removeChild(fireball.element)
+                    this.fireballs.splice(i, 1)
+                    break
+                }
+            }
+        }
+    }
+
     loadLevel1() {
         this.clearMap()
         this.createPlatform(0, 0, this.width, this.wallThickness) // Top
@@ -116,6 +148,7 @@ export class LevelMap {
         // Top section
         this.createPlatform(this.wallThickness, 100, 300, this.wallThickness)
         this.createPlatform(400, 100, 350, this.wallThickness)
+        this.createPlatform(400, 100,  this.wallThickness, 350)
 
         // Middle section
         this.createPlatform(600, 300, 150, this.wallThickness)
@@ -131,9 +164,10 @@ export class LevelMap {
         this.createCollectible(550, 80, "blue-gem")
         this.createCollectible(450, 180, "red-gem")
         // powerUps
-        // this.createCollectible(200, 80, "speed-power")
         this.createCollectible(550, this.height - 50, "air-power")
-        this.createCollectible(200, this.height - 50, "teleport-power")
+        this.createCollectible(400, this.height - 50, "teleport-power")
+        // this.createCollectible(200, this.height - 50, "magic-power")
+        // this.createCollectible(this.width - 100, 200, "teleport-power")
         // exit
         this.createExit(this.width - 80, this.height - 80)
 
@@ -141,7 +175,7 @@ export class LevelMap {
     }
 
     clearMap() {
-        [...this.platforms, ...this.collectibles, ...this.trees, ...this.exits].forEach(item => {
+        [...this.platforms, ...this.collectibles, ...this.trees, ...this.exits, ...this.fireballs].forEach(item => {
             if (item.element && item.element.parentNode) {
                 item.element.parentNode.removeChild(item.element)
             }
@@ -151,6 +185,7 @@ export class LevelMap {
         this.collectibles = []
         this.trees = []
         this.exits = []
+        this.fireballs = []
     }
 
     checkCollisions(player) {
@@ -166,8 +201,8 @@ export class LevelMap {
         const bufferY = Math.min(velocityMagnitude, player.height / 2)
         const bufferX = Math.min(velocityMagnitude, player.width / 2)
 
-        for (const platform of this.platforms) {
-            // Bottom collision (player landing on platform)
+        for (const platform of this.platforms) { // i need to double check this
+            // Bottom collision
             if (player.x + player.width > platform.x + 2 &&
                 player.x < platform.x + platform.width - 2 &&
                 player.y + player.height >= platform.y - bufferY &&
@@ -234,7 +269,6 @@ export class LevelMap {
             player.velocityX = 0
         }
 
-        //might wanna get rid of this mechanic
         for (let i = this.collectibles.length - 1; i >= 0; i--) {
             const collectible = this.collectibles[i]
             if (player.x < collectible.x + collectible.width &&
@@ -242,13 +276,9 @@ export class LevelMap {
                 player.y < collectible.y + collectible.height &&
                 player.y + player.height > collectible.y) {
 
-
                 if (collectible.element && collectible.element.parentNode) {
                     if (collectible.element.classList.contains('powerUp')) {
-                        // console.log(collectible.element.classList[1]); // might wanna have a delay here
                         return { type: "powerUp" , name: collectible.element.classList[1] , onGround, hitCeiling, hitWall }
-
-
                     } else {
                         collectible.element.parentNode.removeChild(collectible.element)
                     }
