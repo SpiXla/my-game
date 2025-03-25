@@ -23,7 +23,6 @@ export class Player {
         this.keys = {}
         this.power = ''
         this.wasSpacePressed = false
-        this.canShootFireball = false
 
         this.initControls()
         this.update()
@@ -77,6 +76,7 @@ export class Player {
                 this.power = ''
             } else if (this.power == 'magic-power') {
                 this.shootFireball()
+                // this.power = ''
 
 
             }
@@ -106,19 +106,41 @@ export class Player {
         }
     }
 
+    // shootFireball() {
+    //     const fireballX = this.facing === 'right'
+    //         ? this.x + this.width
+    //         : this.x - 15;
+
+    //     const fireballY = this.y + this.height / 2;
+
+    //     const fireballEvent = new CustomEvent('shoot-fireball', {
+    //         detail: {
+    //             x: fireballX,
+    //             y: fireballY,
+    //             direction: this.facing
+    //         }
+    //     });
+    //     this.power = ''
+    //     document.dispatchEvent(fireballEvent);
+    // }
     shootFireball() {
         const fireballX = this.facing === 'right'
             ? this.x + this.width
             : this.x - 15;
-
+    
         const fireballY = this.y + this.height / 2;
-
+    
         const fireballEvent = new CustomEvent('shoot-fireball', {
             detail: {
                 x: fireballX,
                 y: fireballY,
                 direction: this.facing
             }
+        });
+        console.log('Fireball event dispatched:', {
+            x: fireballX, 
+            y: fireballY, 
+            direction: this.facing
         });
         this.power = ''
         document.dispatchEvent(fireballEvent);

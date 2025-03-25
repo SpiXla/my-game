@@ -1,23 +1,27 @@
 export class LevelMap {
     constructor(container) {
-        this.container = container || document.getElementById("game-container"); if (!this.container) return
-        this.platforms = []
-        this.collectibles = []
-        this.trees = []
-        this.exits = []
-        this.fireballs = []  // Array to track fireballs
+        this.container = container || document.getElementById("game-container");
+        if (!this.container) return;
+        this.platforms = [];
+        this.collectibles = [];
+        this.trees = [];
+        this.exits = [];
+        this.fireballs = [];
 
-        this.width = this.container.clientWidth
-        this.height = this.container.clientHeight
+        this.width = this.container.clientWidth;
+        this.height = this.container.clientHeight;
 
-        this.wallThickness = 20
+        this.wallThickness = 20;
     }
 
-    createPlatform(x, y, width, height) {
+    createPlatform(x, y, width, height, flag) {
         const platform = document.createElement("div")
         platform.classList.add("platform")
+        if (flag == 'destroyable') {
+            platform.classList.add("destroyable")
+        }
         platform.style.transform = `translate(${x}px, ${y}px)`
-        
+
         platform.style.width = `${width}px`
         platform.style.height = `${height}px`
 
@@ -103,41 +107,133 @@ export class LevelMap {
 
     updateFireballs() {//might wanna use transform here
         for (let i = this.fireballs.length - 1; i >= 0; i--) {
-            const fireball = this.fireballs[i]
-            
+            const fireball = this.fireballs[i];
+
             // Move fireball
-            if (fireball.direction === 'right') {
-                fireball.x += fireball.speed
-            } else {
-                fireball.x -= fireball.speed
-            }
+            fireball.x += fireball.direction === 'right' ? fireball.speed : -fireball.speed;
+            fireball.element.style.left = `${fireball.x}px`;
+            fireball.element.style.top = `${fireball.y}px`;
 
-            // Update visual position
-            fireball.element.style.left = `${fireball.x}px`
-            fireball.element.style.top = `${fireball.y}px`
-
-            // Remove fireball if it goes off screen
+            // Out of bounds check
             if (fireball.x < 0 || fireball.x > this.width) {
-                this.container.removeChild(fireball.element)
-                this.fireballs.splice(i, 1)
+                this.container.removeChild(fireball.element);
+                this.fireballs.splice(i, 1);
+                continue;
             }
 
-            // Check fireball collisions with platforms
-            for (const platform of this.platforms) {
-                if (fireball.x < platform.x + platform.width &&
-                    fireball.x + fireball.width > platform.x &&
+            // Flag to track if fireball should be removed
+            let shouldRemove = false;
+
+            // Check collision with platforms
+            for (let j = this.platforms.length - 1; j >= 0; j--) {
+                const platform = this.platforms[j];
+
+                // Expanded collision detection with precise overlap check
+                const overlapX =
+                    fireball.x < platform.x + platform.width &&
+                    fireball.x + fireball.width > platform.x;
+
+                const overlapY =
                     fireball.y < platform.y + platform.height &&
-                    fireball.y + fireball.height > platform.y) {
-                    
-                    // Remove fireball on platform collision
-                    this.container.removeChild(fireball.element)
-                    this.fireballs.splice(i, 1)
-                    break
+                    fireball.y + fireball.height > platform.y;
+
+                if (overlapX && overlapY) {
+                    // Remove fireball
+                    this.container.removeChild(fireball.element);
+                    shouldRemove = true;
+
+                    // Remove destroyable platform
+                    if (platform.element.classList.contains('destroyable')) {
+                        this.container.removeChild(platform.element);
+                        this.platforms.splice(j, 1);
+                    }
+
+                    break;
                 }
             }
+
+            // Remove fireball if it collided
+            if (shouldRemove) {
+                this.fireballs.splice(i, 1);
+            }
         }
+
+    }
+    // }
+    createLaserBlock(x, y, direction = 'horizontal') {
+        const laserBlock = document.createElement("div");
+        laserBlock.classList.add("laser-block");
+        laserBlock.style.transform = `translate(${x}px, ${y}px)`;
+        laserBlock.style.width = "40px";
+        laserBlock.style.height = "40px";
+        laserBlock.style.backgroundColor = "#ff0000";
+        laserBlock.style.position = "absolute";
+
+        const laserRay = document.createElement("div");
+        laserRay.classList.add("laser-ray");
+        laserRay.style.display = "none";
+        laserRay.style.position = "absolute";
+        laserRay.style.backgroundColor = "rgba(255,0,0,0.7)";
+        laserRay.style.zIndex = "5";
+
+        this.container.appendChild(laserBlock);
+        this.container.appendChild(laserRay);
+
+        const laserBlockObj = {
+            element: laserBlock,
+            rayElement: laserRay,
+            x,
+            y,
+            width: 40,
+            height: 40,
+            direction,
+            shootInterval: null,
+            startLaserCycle: () => {
+                laserBlockObj.shootInterval = setInterval(() => {
+                    this.fireLaser(laserBlockObj);
+                }, 3000); // Shoot every 3 seconds
+            },
+            stopLaserCycle: () => {
+                if (laserBlockObj.shootInterval) {
+                    clearInterval(laserBlockObj.shootInterval);
+                }
+            }
+        };
+
+        return laserBlockObj;
     }
 
+    fireLaser(laserBlock) {
+        const rayElement = laserBlock.rayElement;
+
+        if (laserBlock.direction === 'horizontal') {
+            rayElement.style.width = `${this.width}px`;
+            rayElement.style.height = "10px";
+            rayElement.style.top = `${laserBlock.y + 15}px`;
+            rayElement.style.left = "0px";
+        } else {
+            rayElement.style.width = "10px";
+            rayElement.style.height = `${this.height}px`;
+            rayElement.style.top = "0px";
+            rayElement.style.left = `${laserBlock.x + 15}px`;
+        }
+
+        rayElement.style.display = "block";
+
+        // Dispatch a custom event to check for player hit
+        const laserEvent = new CustomEvent('laser-fired', {
+            detail: {
+                ray: rayElement,
+                block: laserBlock
+            }
+        });
+        document.dispatchEvent(laserEvent);
+
+        // Hide laser after a short duration
+        setTimeout(() => {
+            rayElement.style.display = "none";
+        }, 500);
+    }
     loadLevel1() {
         this.clearMap()
         this.createPlatform(0, 0, this.width, this.wallThickness) // Top
@@ -148,7 +244,7 @@ export class LevelMap {
         // Top section
         this.createPlatform(this.wallThickness, 100, 300, this.wallThickness)
         this.createPlatform(400, 100, 350, this.wallThickness)
-        this.createPlatform(400, 100,  this.wallThickness, 350)
+        this.createPlatform(400, 100, this.wallThickness, 500)
 
         // Middle section
         this.createPlatform(600, 300, 150, this.wallThickness)
@@ -156,8 +252,10 @@ export class LevelMap {
         this.createPlatform(400, 200, 300, this.wallThickness)
 
         // Bottom section 
-        this.createPlatform(100, 500, 200, this.wallThickness)
+        this.createPlatform(100, 550, 200, this.wallThickness)
         this.createPlatform(350, 400, 200, this.wallThickness)
+        this.createPlatform(800, 400, this.wallThickness, 200, 'destroyable')
+        this.createPlatform(1000, 400, this.wallThickness, 200, 'destroyable')
 
         //collectibles
         this.createCollectible(120, 80, "yellow-gem")
@@ -188,18 +286,19 @@ export class LevelMap {
         this.fireballs = []
     }
 
-    checkCollisions(player) {
-        let onGround = false
-        let hitCeiling = false
-        let hitWall = false
+   checkCollisions(player) {
+        let onGround = false;
+        let hitCeiling = false;
+        let hitWall = false;
 
         const velocityMagnitude = Math.sqrt(
             player.velocityX * player.velocityX +
             player.velocityY * player.velocityY
-        )
+        );
 
-        const bufferY = Math.min(velocityMagnitude, player.height / 2)
-        const bufferX = Math.min(velocityMagnitude, player.width / 2)
+        const bufferY = Math.min(velocityMagnitude, player.height / 2);
+        const bufferX = Math.min(velocityMagnitude, player.width / 2);
+
 
         for (const platform of this.platforms) { // i need to double check this
             // Bottom collision
@@ -258,19 +357,19 @@ export class LevelMap {
             }
         }
 
-        // boundary limitation
         if (player.x < 0) {
-            player.x = 0
-            player.velocityX = 0
+            player.x = 0;
+            player.velocityX = 0;
         }
 
         if (player.x + player.width > this.width) {
-            player.x = this.width - player.width
-            player.velocityX = 0
+            player.x = this.width - player.width;
+            player.velocityX = 0;
         }
 
+        // Collectible collection
         for (let i = this.collectibles.length - 1; i >= 0; i--) {
-            const collectible = this.collectibles[i]
+            const collectible = this.collectibles[i];
             if (player.x < collectible.x + collectible.width &&
                 player.x + player.width > collectible.x &&
                 player.y < collectible.y + collectible.height &&
@@ -278,28 +377,50 @@ export class LevelMap {
 
                 if (collectible.element && collectible.element.parentNode) {
                     if (collectible.element.classList.contains('powerUp')) {
-                        return { type: "powerUp" , name: collectible.element.classList[1] , onGround, hitCeiling, hitWall }
+                        return { type: "powerUp", name: collectible.element.classList[1], onGround, hitCeiling, hitWall };
                     } else {
-                        collectible.element.parentNode.removeChild(collectible.element)
+                        collectible.element.parentNode.removeChild(collectible.element);
                     }
                 }
-                
-                const collected = collectible
-                this.collectibles.splice(i, 1)
-                return { type: "collectible", item: collected, onGround, hitCeiling, hitWall }
+
+                const collected = collectible;
+                this.collectibles.splice(i, 1);
+                return { type: "collectible", item: collected, onGround, hitCeiling, hitWall };
             }
         }
 
-        // Check for exit
+        // Exit collision
         for (const exit of this.exits) {
             if (player.x < exit.x + exit.width &&
                 player.x + player.width > exit.x &&
                 player.y < exit.y + exit.height &&
                 player.y + player.height > exit.y) {
-                return { type: "exit", onGround, hitCeiling, hitWall }
+                return { type: "exit", onGround, hitCeiling, hitWall };
             }
         }
 
-        return { onGround, hitCeiling, hitWall }
+        // Laser hit detection
+        const laserRays = document.querySelectorAll('.laser-ray');
+        for (let ray of laserRays) {
+            const rayRect = ray.getBoundingClientRect();
+            const playerRect = player.element.getBoundingClientRect();
+
+            if (
+                rayRect.left < playerRect.right &&
+                rayRect.right > playerRect.left &&
+                rayRect.top < playerRect.bottom &&
+                rayRect.bottom > playerRect.top
+            ) {
+                console.log('Precise Laser Hit Detected!');
+                return { 
+                    type: "laser-hit", 
+                    onGround, 
+                    hitCeiling, 
+                    hitWall 
+                };
+            }
+        }
+
+        return { onGround, hitCeiling, hitWall };
     }
 }
