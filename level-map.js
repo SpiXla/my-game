@@ -105,7 +105,7 @@ export class LevelMap {
         return fireBallObj
     }
 
-    updateFireballs() {//might wanna use transform here
+    updateFireballs() {
         for (let i = this.fireballs.length - 1; i >= 0; i--) {
             const fireball = this.fireballs[i];
 
@@ -157,9 +157,8 @@ export class LevelMap {
                 this.fireballs.splice(i, 1);
             }
         }
-
     }
-    // }
+
     createLaserBlock(x, y, direction = 'horizontal') {
         const laserBlock = document.createElement("div");
         laserBlock.classList.add("laser-block");
@@ -205,35 +204,50 @@ export class LevelMap {
 
     fireLaser(laserBlock) {
         const rayElement = laserBlock.rayElement;
+        let rayLength = this.width;
 
         if (laserBlock.direction === 'horizontal') {
-            rayElement.style.width = `${this.width}px`;
+            // Find first collision point
+            for (const platform of this.platforms) {
+                if (platform.y <= laserBlock.y + 15 && 
+                    platform.y + platform.height >= laserBlock.y + 15) {
+                    const potentialLength = platform.x - laserBlock.x;
+                    if (potentialLength > 0 && potentialLength < rayLength) {
+                        rayLength = potentialLength;
+                    }
+                }
+            }
+
+            rayElement.style.width = `${rayLength}px`;
             rayElement.style.height = "10px";
             rayElement.style.top = `${laserBlock.y + 15}px`;
-            rayElement.style.left = "0px";
+            rayElement.style.left = `${laserBlock.x}px`;
         } else {
+            // Vertical laser similar logic
+            for (const platform of this.platforms) {
+                if (platform.x <= laserBlock.x + 15 && 
+                    platform.x + platform.width >= laserBlock.x + 15) {
+                    const potentialLength = platform.y - laserBlock.y;
+                    if (potentialLength > 0 && potentialLength < rayLength) {
+                        rayLength = potentialLength;
+                    }
+                }
+            }
+
             rayElement.style.width = "10px";
-            rayElement.style.height = `${this.height}px`;
-            rayElement.style.top = "0px";
+            rayElement.style.height = `${rayLength}px`;
+            rayElement.style.top = `${laserBlock.y}px`;
             rayElement.style.left = `${laserBlock.x + 15}px`;
         }
 
         rayElement.style.display = "block";
-
-        // Dispatch a custom event to check for player hit
-        const laserEvent = new CustomEvent('laser-fired', {
-            detail: {
-                ray: rayElement,
-                block: laserBlock
-            }
-        });
-        document.dispatchEvent(laserEvent);
 
         // Hide laser after a short duration
         setTimeout(() => {
             rayElement.style.display = "none";
         }, 500);
     }
+
     loadLevel1() {
         this.clearMap()
         this.createPlatform(0, 0, this.width, this.wallThickness) // Top
@@ -264,8 +278,7 @@ export class LevelMap {
         // powerUps
         this.createCollectible(550, this.height - 50, "air-power")
         this.createCollectible(400, this.height - 50, "teleport-power")
-        // this.createCollectible(200, this.height - 50, "magic-power")
-        // this.createCollectible(this.width - 100, 200, "teleport-power")
+
         // exit
         this.createExit(this.width - 80, this.height - 80)
 
@@ -286,7 +299,7 @@ export class LevelMap {
         this.fireballs = []
     }
 
-   checkCollisions(player) {
+    checkCollisions(player) {
         let onGround = false;
         let hitCeiling = false;
         let hitWall = false;
@@ -299,8 +312,7 @@ export class LevelMap {
         const bufferY = Math.min(velocityMagnitude, player.height / 2);
         const bufferX = Math.min(velocityMagnitude, player.width / 2);
 
-
-        for (const platform of this.platforms) { // i need to double check this
+        for (const platform of this.platforms) {
             // Bottom collision
             if (player.x + player.width > platform.x + 2 &&
                 player.x < platform.x + platform.width - 2 &&

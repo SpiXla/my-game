@@ -80,6 +80,13 @@ export class Game {
 
         const mapCollisions = this.map.checkCollisions(this.player);
 
+        // Handle laser hit
+        if (mapCollisions.type === "laser-hit") {
+            console.log('Laser hit detected! Reducing lives.');
+            this.updateLives(-1);
+            this.player.reset();
+        }
+
         this.player.move(mapCollisions);
         this.player.updatePosition();
 
@@ -96,10 +103,6 @@ export class Game {
             if (this.gemsCollected >= this.totalGems) {
                 this.levelComplete();
             }
-        } else if (mapCollisions.type === "laser-hit") {
-            console.log('Laser hit detected! Reducing lives.');
-            this.updateLives(-1);
-            // need to respawn the player on the start 
         }
 
         requestAnimationFrame(() => this.gameLoop());

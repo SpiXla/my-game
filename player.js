@@ -22,8 +22,6 @@ export class Player {
         this.facing = "right"
         this.keys = {}
         this.power = ''
-        this.wasSpacePressed = false
-
         this.initControls()
         this.update()
     }
@@ -67,7 +65,7 @@ export class Player {
         }
 
         const isSpacePressed = this.keys[' '];
-        if (isSpacePressed && !this.wasSpacePressed) {
+        if (isSpacePressed) {
 
             if (this.power === 'air-power') {
                 this.velocityY = -this.jumpStrength
@@ -76,9 +74,6 @@ export class Player {
                 this.power = ''
             } else if (this.power == 'magic-power') {
                 this.shootFireball()
-                // this.power = ''
-
-
             }
         }
         this.wasSpacePressed = isSpacePressed;
@@ -106,23 +101,6 @@ export class Player {
         }
     }
 
-    // shootFireball() {
-    //     const fireballX = this.facing === 'right'
-    //         ? this.x + this.width
-    //         : this.x - 15;
-
-    //     const fireballY = this.y + this.height / 2;
-
-    //     const fireballEvent = new CustomEvent('shoot-fireball', {
-    //         detail: {
-    //             x: fireballX,
-    //             y: fireballY,
-    //             direction: this.facing
-    //         }
-    //     });
-    //     this.power = ''
-    //     document.dispatchEvent(fireballEvent);
-    // }
     shootFireball() {
         const fireballX = this.facing === 'right'
             ? this.x + this.width
@@ -168,7 +146,6 @@ export class Player {
         this.velocityX = 0
         this.velocityY = 0
         this.power = ''
-        this.canShootFireball = false
         this.updatePosition()
     }
 }
