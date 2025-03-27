@@ -4,56 +4,59 @@ import { LevelMap } from "./level-map.js";
 export class Game {
     constructor() {
         this.container = document.getElementById("game-container");
-        this.player = new Player();
-        this.map = new LevelMap(this.container);
+        if (!this.container) {
+            console.error("Game container not found!");
+            return;
+        }
 
+        // Initialize game elements
+        this.map = new LevelMap(this.container);
+        this.player = new Player(this.container);
+        
+        // Game state
         this.score = 0;
         this.lives = 3;
         this.isGameOver = false;
         this.gemsCollected = 0;
         this.totalGems = 0;
-        this.laserBlocks = [];
+        this.currentLevel = 1;
 
-        this.scoreElement = document.getElementById("score") || this.createScoreElement();
-        this.livesElement = document.getElementById("lives") || this.createLivesElement();
+        // UI Elements
+        this.scoreElement = document.getElementById("score") || this.createUIElement("score", "Score: 0", "10px", "10px");
+        this.livesElement = document.getElementById("lives") || this.createUIElement("lives", "Lives: 3", "10px", "10px", true);
 
-        document.addEventListener('shoot-fireball', (e) => this.createFireball(e.detail));
+        // Event listeners
+        document.addEventListener('shoot-fireball', (e) => this.handleFireball(e.detail));
+        window.addEventListener('resize', () => this.handleResize());
 
-        this.loadLevel(1);
-
+        // Start the game
+        this.loadLevel(this.currentLevel);
         this.gameLoop();
     }
 
-    createScoreElement() {
-        const scoreElement = document.createElement("div");
-        scoreElement.id = "score";
-        scoreElement.textContent = "Score: 0";
-        scoreElement.classList.add("game-ui");
-        document.body.appendChild(scoreElement);
-        return scoreElement;
-    }
-
-    createLivesElement() {
-        const livesElement = document.createElement("div");
-        livesElement.id = "lives";
-        livesElement.textContent = "Lives: 3";
-        livesElement.classList.add("game-ui");
-        document.body.appendChild(livesElement);
-        return livesElement;
+    createUIElement(id, text, left, top, isRight = false) {
+        const element = document.createElement("div");
+        element.id = id;
+        element.textContent = text;
+        element.classList.add("game-ui");
+        element.style.left = isRight ? "" : left;
+        element.style.right = isRight ? left : "";
+        element.style.top = top;
+        document.body.appendChild(element);
+        return element;
     }
 
     loadLevel(levelNumber) {
         this.clearLevel();
+        this.currentLevel = levelNumber;
+        this.gemsCollected = 0;
 
         if (levelNumber === 1) {
             this.map.loadLevel1();
             this.totalGems = this.map.collectibles.length;
-
-            const laserBlock1 = this.map.createLaserBlock(600, 400, 'vertical');
-            this.laserBlocks.push(laserBlock1);
-
-            // Start laser cycles
-            this.laserBlocks.forEach(block => block.startLaserCycle());
+        } else if (levelNumber === 2) {
+            this.map.loadLevel2();
+            this.totalGems = this.map.collectibles.length;
         }
 
         this.player.reset();
@@ -76,39 +79,60 @@ export class Game {
     gameLoop() {
         if (this.isGameOver) return;
 
+        // Update game elements
         this.map.updateFireballs();
 
-        const mapCollisions = this.map.checkCollisions(this.player);
+        // Check collisions
+        const collisions = this.map.checkCollisions(this.player);
 
-        // Handle laser hit
-        if (mapCollisions.type === "laser-hit") {
-            console.log('Laser hit detected! Reducing lives.');
-            this.updateLives(-1);
-            this.player.reset();
-        }
+        // Handle collisions
+        this.handleCollisions(collisions);
 
-        this.player.move(mapCollisions);
+        // Update player        
+        this.player.move(collisions);
         this.player.updatePosition();
-
-        if (mapCollisions.type === "collectible") {
-            this.gemsCollected++;
-
-            let points = 10;
-            if (mapCollisions.item.type === "yellow-gem") points = 20;
-            if (mapCollisions.item.type === "red-gem") points = 30;
-            if (mapCollisions.item.type === "blue-gem") points = 50;
-
-            this.updateScore(points);
-        } else if (mapCollisions.type === "exit") {
-            if (this.gemsCollected >= this.totalGems) {
-                this.levelComplete();
-            }
-        }
 
         requestAnimationFrame(() => this.gameLoop());
     }
 
+    handleCollisions(collisions) {
+        if (collisions.type === "laser-hit") {
+            this.updateLives(-1);
+            this.player.reset();
+        } else if (collisions.type === "collectible") {
+            this.handleCollectible(collisions.item);
+        } else if (collisions.type === "exit") {
+            if (this.gemsCollected >= this.totalGems) {
+                this.levelComplete();
+            }
+        }
+    }
+
+    handleCollectible(item) {
+        this.gemsCollected++;
+        
+        let points = 10;
+        if (item.type === "yellow-gem") points = 20;
+        if (item.type === "red-gem") points = 30;
+        if (item.type === "blue-gem") points = 50;
+
+        this.updateScore(points);
+    }
+
+    handleFireball(detail) {
+        this.map.createFireball(detail.x, detail.y, detail.direction);
+    }
+
+    handleResize() {
+        // Recalculate positions and sizes
+        this.map.handleResize();
+        this.player.updateSizes();
+        this.player.updatePosition();
+    }
+
     levelComplete() {
+        this.isGameOver = true;
+
         const levelCompleteElement = document.createElement("div");
         levelCompleteElement.classList.add("level-complete");
         levelCompleteElement.innerHTML = `
@@ -120,11 +144,10 @@ export class Game {
 
         this.container.appendChild(levelCompleteElement);
 
-        this.isGameOver = true;
-
         document.getElementById("next-level").addEventListener("click", () => {
             levelCompleteElement.remove();
             this.isGameOver = false;
+            this.loadLevel(2); // Load next level
             this.gameLoop();
         });
     }
@@ -158,27 +181,10 @@ export class Game {
         this.updateLives(0);
 
         this.loadLevel(1);
-
         this.gameLoop();
     }
 
-    createFireball(detail) {
-        console.log('Creating fireball:', detail);
-        this.map.createFireball(detail.x, detail.y, detail.direction);
-    }
-
     clearLevel() {
-        this.laserBlocks.forEach(block => {
-            block.stopLaserCycle();
-            if (block.element && block.element.parentNode) {
-                this.container.removeChild(block.element);
-            }
-            if (block.rayElement && block.rayElement.parentNode) {
-                this.container.removeChild(block.rayElement);
-            }
-        });
-        this.laserBlocks = [];
-
         this.map.clearMap();
     }
 }
