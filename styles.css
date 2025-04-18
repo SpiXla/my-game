@@ -114,7 +114,7 @@ body {
   transform: translateX(-50%);
   width: 100px;
   height: 15px;
-  /* border-radius: 10px; */
+  border-radius: 10px;
   background: linear-gradient(to right, #ff7e5f, #feb47b);
   box-shadow: 0 0 15px rgba(254, 180, 123, 0.7);
 }

@@ -62,7 +62,7 @@ class Game {
     this.paddle.style.height = `${this.paddleHeight}px`;
     this.ball.style.width = `${this.ballSize}px`;
     this.ball.style.height = `${this.ballSize}px`;
-
+    // transform
     this.paddle.style.left = `${this.paddleX}px`;
 
     this.ball.style.left = `${this.ballX}px`;
@@ -92,8 +92,8 @@ class Game {
         brick.className = 'brick';
         brick.style.width = `${brickWidth}px`;
         brick.style.height = `${brickHeight}px`;
-        brick.style.left = `${brickX}px`;
-        brick.style.top = `${brickY}px`;
+        brick.style.left = `${brickX}px`;// transform
+        brick.style.top = `${brickY}px`;// transform
 
         this.bricksGrid.appendChild(brick);
 
@@ -114,12 +114,6 @@ class Game {
     this.isPaused = false;
     this.hideAllScreens();
 
-    this.ballX = this.gameBoard.offsetWidth / 2 - this.ballSize / 2;
-    this.ballY = this.gameBoard.offsetHeight - 100;
-    this.ballSpeedX = 4;
-    this.ballSpeedY = -4;
-
-    this.paddleX = (this.gameBoard.offsetWidth - this.paddleWidth) / 2;
     this.paddle.style.left = `${this.paddleX}px`;
 
     this.startTimer();
@@ -145,7 +139,6 @@ class Game {
 
   togglePause() {
     if (!this.isPlaying) return;
-    console.log(this.isPlaying, this.isPaused);
 
     this.isPaused = !this.isPaused;
 
@@ -154,7 +147,7 @@ class Game {
       // clearInterval(this.timerInterval);
     } else {
       this.hideAllScreens();
-      this.startTimer();
+      this.startTimer();//  need to keep track of the timer
       this.gameLoop();
     }
   }
@@ -224,154 +217,6 @@ class Game {
     this.winScreen.style.display = 'none';
   }
 
-  // gameLoop() {
-  //   if (!this.isPlaying || this.isPaused) return;
-
-  //   // Move ball
-  //   this.ballX += this.ballSpeedX;
-  //   this.ballY += this.ballSpeedY;
-
-  //   // Wall collision (left/right)
-  //   if (this.ballX <= 0 || this.ballX + this.ballSize >= this.gameBoard.offsetWidth) {
-  //     this.ballSpeedX = -this.ballSpeedX;
-  //     // Fix position if ball went beyond bounds
-  //     if (this.ballX < 0) this.ballX = 0;
-  //     if (this.ballX + this.ballSize > this.gameBoard.offsetWidth) {
-  //       this.ballX = this.gameBoard.offsetWidth - this.ballSize;
-  //     }
-  //   }
-
-  //   // Wall collision (top)
-  //   if (this.ballY <= 0) {
-  //     this.ballSpeedY = -this.ballSpeedY;
-  //     this.ballY = 0; // Fix position
-  //   }
-
-  //   // Get actual paddle position for collision detection
-  //   const paddleTop = this.gameBoard.offsetHeight - this.paddleHeight - 10; // Assuming paddle is at bottom with 10px margin
-
-  //   // Paddle collision - fixed version
-  //   if (
-  //     this.ballY + this.ballSize >= paddleTop &&
-  //     this.ballY <= paddleTop + this.paddleHeight &&
-  //     this.ballX + this.ballSize >= this.paddleX &&
-  //     this.ballX <= this.paddleX + this.paddleWidth
-  //   ) {
-  //     // Prevent ball from getting stuck in paddle
-  //     if (this.ballSpeedY > 0) {
-  //       // Only reverse direction if ball is moving downward
-  //       this.ballY = paddleTop - this.ballSize;
-
-  //       // Calculate bounce angle based on where ball hits paddle
-  //       const hitPosition = (this.ballX + this.ballSize / 2) - (this.paddleX + this.paddleWidth / 2);
-  //       const normalizedHit = hitPosition / (this.paddleWidth / 2);
-  //       const bounceAngle = normalizedHit * Math.PI / 3; // Max 60 degrees
-
-  //       const speed = Math.sqrt(this.ballSpeedX * this.ballSpeedX + this.ballSpeedY * this.ballSpeedY);
-  //       this.ballSpeedX = speed * Math.sin(bounceAngle);
-  //       this.ballSpeedY = -speed * Math.cos(bounceAngle);
-  //     }
-  //   }
-
-  //   // Bottom wall collision (lose life)
-  //   if (this.ballY + this.ballSize >= this.gameBoard.offsetHeight) {
-  //     this.lives--;
-  //     this.updateStats();
-
-  //     if (this.lives <= 0) {
-  //       this.gameOver();
-  //       return;
-  //     } else {
-  //       // Reset ball and paddle
-  //       this.ballX = this.gameBoard.offsetWidth / 2 - this.ballSize / 2;
-  //       this.ballY = this.gameBoard.offsetHeight - 100;
-  //       this.paddleX = (this.gameBoard.offsetWidth - this.paddleWidth) / 2;
-  //       this.ballSpeedX = 4 * (Math.random() > 0.5 ? 1 : -1);
-  //       this.ballSpeedY = -4;
-  //     }
-  //   }
-
-  //   // Brick collision
-  //   let bricksRemaining = 0;
-  //   for (let brick of this.bricks) {
-  //     if (brick.destroyed) continue;
-  //     bricksRemaining++;
-
-  //     const bx = brick.x;
-  //     const by = brick.y;
-  //     const bw = brick.width;
-  //     const bh = brick.height;
-
-  //     const ballLeft = this.ballX;
-  //     const ballRight = this.ballX + this.ballSize;
-  //     const ballTop = this.ballY;
-  //     const ballBottom = this.ballY + this.ballSize;
-
-  //     const brickLeft = bx;
-  //     const brickRight = bx + bw;
-  //     const brickTop = by;
-  //     const brickBottom = by + bh;
-
-  //     const isColliding =
-  //       ballRight > brickLeft &&
-  //       ballLeft < brickRight &&
-  //       ballBottom > brickTop &&
-  //       ballTop < brickBottom;
-
-  //     if (isColliding) {
-  //       brick.destroyed = true;
-  //       brick.element.classList.add('destroyed');
-  //       this.score += 10 * this.level;
-  //       this.updateStats();
-
-  //       const prevBallX = this.ballX - this.ballSpeedX;
-  //       const prevBallY = this.ballY - this.ballSpeedY;
-  //       const prevBallRight = prevBallX + this.ballSize;
-  //       const prevBallBottom = prevBallY + this.ballSize;
-
-  //       const hitFromTop = prevBallBottom <= brickTop;
-  //       const hitFromBottom = prevBallY >= brickBottom;
-  //       const hitFromLeft = prevBallRight <= brickLeft;
-  //       const hitFromRight = prevBallX >= brickRight;
-
-  //       if (hitFromTop || hitFromBottom) {
-  //         this.ballSpeedY = -this.ballSpeedY;
-  //       } else if (hitFromLeft || hitFromRight) {
-  //         this.ballSpeedX = -this.ballSpeedX;
-  //       } else {
-  //         this.ballSpeedY = -this.ballSpeedY;
-  //       }
-
-  //       break; // Only handle one brick per frame
-  //     }
-  //   }
-
-  //   // Level complete
-  //   if (bricksRemaining === 0) {
-  //     this.levelComplete();
-  //     return;
-  //   }
-
-  //   // Update ball position
-  //   this.ball.style.left = `${this.ballX}px`;
-  //   this.ball.style.top = `${this.ballY}px`;
-
-  //   // Paddle movement
-  //   const paddleSpeed = 7;
-  //   if (this.rightPressed) {
-  //     this.paddleX = Math.min(this.paddleX + paddleSpeed, this.gameBoard.offsetWidth - this.paddleWidth);
-  //   }
-  //   if (this.leftPressed) {
-  //     this.paddleX = Math.max(this.paddleX - paddleSpeed, 0);
-  //   }
-
-  //   // Apply paddle position
-  //   this.paddle.style.left = `${this.paddleX}px`;
-
-  //   // Continue loop
-  //   requestAnimationFrame(() => this.gameLoop());
-  // }
-  // Replace the entire gameLoop() method with this improved version
   gameLoop() {
     if (!this.isPlaying || this.isPaused) return;
 
@@ -389,10 +234,10 @@ class Game {
     }
 
 
-    if (this.ballY <= 0) {
-      this.ballSpeedY = -this.ballSpeedY;
-      this.ballY = 0;
-    }
+    // if (this.ballY <= 0) {
+    //   this.ballSpeedY = -this.ballSpeedY;
+    //   this.ballY = 0;
+    // }
 
     // const paddleTop = this.gameBoard.offsetHeight - this.paddleHeight;
     // // Paddle collision
@@ -401,16 +246,18 @@ class Game {
 
     const ballRect = this.ball.getBoundingClientRect();
     const paddleRect = this.paddle.getBoundingClientRect();
-    
-    
+
+
     if (
       paddleRect.left < ballRect.right &&
       paddleRect.top < ballRect.bottom &&
       paddleRect.right > ballRect.left &&
-      paddleRect.bottom > ballRect.top && // i should add a condition for the bottom collession between the ball and paddle 
+      // paddleRect.bottom > ballRect.top && // i should add a condition for the bottom collession between the ball and paddle 
       this.ballSpeedY > 0
     ) {
-       
+      // console.log(paddleRect , ballRect);
+
+
       const hitPosition = (ballRect.left + ballRect.width / 2) - (paddleRect.left + paddleRect.width / 2);
       const normalizedHit = hitPosition / (paddleRect.width / 2);
       const bounceAngle = normalizedHit * Math.PI / 3;
@@ -504,12 +351,20 @@ class Game {
     const paddleSpeed = 7;
     if (this.rightPressed) {
       this.paddleX = Math.min(this.paddleX + paddleSpeed, this.gameBoard.offsetWidth - this.paddleWidth);
+      // this.paddleX += paddleSpeed
+      console.log(this.paddleX + paddleSpeed, this.gameBoard.offsetWidth - this.paddleWidth,);
+      console.log(Math.min(this.paddleX + paddleSpeed, this.gameBoard.offsetWidth - this.paddleWidth));
+
     }
     if (this.leftPressed) {
       this.paddleX = Math.max(this.paddleX - paddleSpeed, 0);
+      // this.paddle.style.transform = `translate(${this.paddleX}px)`;
+
     }
-    this.paddle.style.transform = `translateX(${this.paddleX  - this.gameBoard.offsetWidth/2 + this.paddleWidth}px)`;
-    // this.paddle.style.left = `${this.paddleX+this.paddleWidth /2}px`
+    console.log("curr pos ::::", this.paddleX, " / acc ::", paddleRect.left)
+    // this.paddle.style.transform = `translate(${this.paddleX}px)`;
+    this.paddle.style.transform = `translate(${this.paddleX-this.gameBoard.offsetWidth/2+ this.paddleWidth/2}px)`; //  TODO needs a lot of revision
+    // this.paddle.style.left = `${this.paddleX + this.paddleWidth / 2}px`
 
     requestAnimationFrame(() => this.gameLoop());
   }
